@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+var program  = require('commander');
+
+var pkg = require('../package.json');
+var version = pkg.version;
+
+program
+    .version(version)
+    .usage('[options]')
+    .option('-m, --model <modelName>', 'model name')
+    .option('-f, --fields <fields>', 'model fields (name1:type1,name2:type2)')
+    .option('-r, --rest', 'enable generation REST')
+    .parse(process.argv);
