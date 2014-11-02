@@ -1,0 +1,19 @@
+{
+  "name": "express-mongoose-generator",
+  "version": "0.1.0",
+  "description": "A mongoose model generator for Express.js 4",
+  "author": "Damien Perrier",
+  "keywords": [
+    "Mongoose",
+    "Express",
+    "Generator"
+  ],
+  "main": "bin/mongoose-gen",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "license": "MIT"
+}
