@@ -34,11 +34,12 @@ program
 
 // Main program
 (function (path){
-    if(program.model && program.fields){
+    if(program.model || program.fields){
         runNonInteractiveMode(path);
     } else {
         runInteractiveMode(path);
     }
+    closeProgram();
 })('.');
 
 /**
@@ -104,7 +105,14 @@ function runInteractiveMode(path){
  * @param path {string} destination path
  */
 function runNonInteractiveMode(path){
-    throw 'Not implemented';
+    if(!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)){ return ; }
+
+    var modelName = program.model;
+    var modelFields = formatFieldsParamInArray(program.fields);
+    if(!modelFields){ return ;}
+
+    console.log('modelName : ' + modelName);
+    console.log('modelFields : ' + modelFields);
 }
 
 /**
@@ -124,6 +132,13 @@ function askQuestion(question, validate, callback){
         }
         callback(answer);
     });
+}
+
+/**
+ * Close the program
+ */
+function closeProgram(){
+    rl.close();
 }
 
 /**
@@ -165,4 +180,62 @@ function isRestParamValid(param){
         return false;
     }
     return true;
+}
+
+/**
+ * Validate fields input
+ * @param fields {string}
+ * @returns {boolean} is validated
+ */
+function isFieldsParamValid(fields){
+    if(!fields || fields.trim().length === 0){
+        console.error('Argument required : fields !');
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Validate name / type of a field
+ * @param fieldName {string}
+ * @param fieldType {string}
+ * @returns {boolean} is validated
+ */
+function isFieldValid(fieldName, fieldType){
+    if(!fieldName || fieldName.trim().length === 0){
+        console.error('Argument required : Field Name');
+        return false;
+    }
+    if(!fieldType || fieldType.trim().length === 0){
+        console.error('Argument required : Field Type');
+        return false;
+    }
+    if(!allowedFieldsTypes.hasOwnProperty(fieldType)){
+        console.error('Invalid Argument : Field Type is not allowed');
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Format fields input in array
+ * @param fields {string} fields input
+ * @returns {Array} fields formatted
+ */
+function formatFieldsParamInArray(fields){
+    var arrayFields = fields.split(',');
+    var result = [];
+
+    var err = arrayFields.every(function(field){
+        var f = field.split(':');
+        var fieldName = f[0];
+        var fieldType = (f[1] || 'string');
+
+        if(!isFieldValid(fieldName, fieldType)){ return false; }
+
+        result.push([fieldName, fieldType]);
+        return true;
+    });
+
+    return (!err)? false : result;
 }
