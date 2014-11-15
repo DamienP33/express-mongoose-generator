@@ -16,13 +16,7 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
-var allowedFieldsTypes = {
-    "string" : String,
-    "number" : Number,
-    "date"   : Date,
-    "boolean": Boolean,
-    "array"  : Array
-};
+var allowedFieldsTypes = ['string', 'number', 'date', 'boolean', 'array'];
 
 // CLI
 program
@@ -40,7 +34,6 @@ program
     } else {
         runInteractiveMode(path);
     }
-    //closeProgram();
 })('.');
 
 /**
@@ -97,7 +90,9 @@ function runInteractiveMode(path){
             }
         },
         function(err, results){
-            console.log(results);
+            generators.generateModel(path, results.name, results.fields);
+
+            closeProgram();
     });
 }
 
@@ -110,9 +105,10 @@ function runNonInteractiveMode(path){
 
     var modelName = program.model;
     var modelFields = formatFieldsParamInArray(program.fields);
-    if(!modelFields){ return ;}
+    if(!modelFields){ closeProgram(); return ;}
 
     generators.generateModel(path, modelName, modelFields);
+    closeProgram();
 }
 
 /**
@@ -161,7 +157,7 @@ function isModelNameParamValid(name){
  */
 function isFieldTypeParamValid(fieldType){
     if(!fieldType || fieldType.trim().length === 0){ fieldType = 'string'; } // default value
-    if(!allowedFieldsTypes.hasOwnProperty(fieldType)){
+    if(allowedFieldsTypes.indexOf(fieldType) == -1){
         console.error('Invalid Argument : fieldType is not allowed');
         return false;
     }
@@ -210,7 +206,7 @@ function isFieldValid(fieldName, fieldType){
         console.error('Argument required : Field Type');
         return false;
     }
-    if(!allowedFieldsTypes.hasOwnProperty(fieldType)){
+    if(allowedFieldsTypes.indexOf(fieldType) == -1){
         console.error('Invalid Argument : Field Type is not allowed');
         return false;
     }
