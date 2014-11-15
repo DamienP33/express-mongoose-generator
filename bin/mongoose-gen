@@ -6,6 +6,7 @@
 var program  = require('commander');
 var readline = require('readline');
 var async    = require('async');
+var generators = require('../lib/generators');
 
 var pkg = require('../package.json');
 var version = pkg.version;
@@ -39,7 +40,7 @@ program
     } else {
         runInteractiveMode(path);
     }
-    closeProgram();
+    //closeProgram();
 })('.');
 
 /**
@@ -111,8 +112,7 @@ function runNonInteractiveMode(path){
     var modelFields = formatFieldsParamInArray(program.fields);
     if(!modelFields){ return ;}
 
-    console.log('modelName : ' + modelName);
-    console.log('modelFields : ' + modelFields);
+    generators.generateModel(path, modelName, modelFields);
 }
 
 /**
@@ -233,7 +233,10 @@ function formatFieldsParamInArray(fields){
 
         if(!isFieldValid(fieldName, fieldType)){ return false; }
 
-        result.push([fieldName, fieldType]);
+        result.push({
+            name: fieldName,
+            type: fieldType
+        });
         return true;
     });
 
