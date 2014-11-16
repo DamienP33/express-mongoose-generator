@@ -7,6 +7,7 @@ var program  = require('commander');
 var readline = require('readline');
 var async    = require('async');
 var generators = require('../lib/generators');
+var cliStyles = require('../lib/cliStyles');
 
 var pkg = require('../package.json');
 var version = pkg.version;
@@ -44,7 +45,7 @@ function runInteractiveMode(path){
     async.series({
             name: function (cb){
                 askQuestion('Model Name : ', isModelNameParamValid, function (name){
-                    console.log('Available types : string, number, date, boolean, array');
+                    console.log(cliStyles.green + 'Available types : string, number, date, boolean, array' + cliStyles.reset);
                     cb(null, name);
                 });
             },
@@ -83,7 +84,7 @@ function runInteractiveMode(path){
                     });
             },
             rest: function (cb) {
-                askQuestion('Generate Rest ? [yes] : ', isRestParamValid, function(rest){
+                askQuestion('Generate Rest (yes/no) ? [yes] : ', isRestParamValid, function(rest){
                     rest = (rest.trim().length === 0) ? 'yes' : rest;
                     cb(null, rest);
                 });
@@ -106,7 +107,7 @@ function runInteractiveMode(path){
  * @param path {string} destination path
  */
 function runNonInteractiveMode(path){
-    if(!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)){ return ; }
+    if(!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)){ closeProgram(); return ; }
 
     var modelName = program.model;
     var modelFields = formatFieldsParamInArray(program.fields);
@@ -155,7 +156,7 @@ function closeProgram(){
  */
 function isModelNameParamValid(name){
     if(!name || name.trim().length === 0){
-        console.error('Argument required : modelName !');
+        consoleError('Argument required : Model name');
         return false;
     }
     return true;
@@ -169,7 +170,7 @@ function isModelNameParamValid(name){
 function isFieldTypeParamValid(fieldType){
     if(!fieldType || fieldType.trim().length === 0){ fieldType = 'string'; } // default value
     if(allowedFieldsTypes.indexOf(fieldType) == -1){
-        console.error('Invalid Argument : fieldType is not allowed');
+        consoleError('Invalid Argument : Field type is not allowed');
         return false;
     }
     return true;
@@ -183,7 +184,7 @@ function isFieldTypeParamValid(fieldType){
 function isRestParamValid(param){
     if(!param || param.trim().length === 0){ param = 'yes'; } // default value
     if(param !== 'yes' && param !== 'no'){
-        console.error('Argument invalid');
+        consoleError('Argument invalid : rest');
         return false;
     }
     return true;
@@ -196,7 +197,7 @@ function isRestParamValid(param){
  */
 function isFieldsParamValid(fields){
     if(!fields || fields.trim().length === 0){
-        console.error('Argument required : fields !');
+        consoleError('Argument required : fields');
         return false;
     }
     return true;
@@ -210,15 +211,15 @@ function isFieldsParamValid(fields){
  */
 function isFieldValid(fieldName, fieldType){
     if(!fieldName || fieldName.trim().length === 0){
-        console.error('Argument required : Field Name');
+        consoleError('Argument required : Field Name');
         return false;
     }
     if(!fieldType || fieldType.trim().length === 0){
-        console.error('Argument required : Field Type');
+        consoleError('Argument required : Field type');
         return false;
     }
     if(allowedFieldsTypes.indexOf(fieldType) == -1){
-        console.error('Invalid Argument : Field Type is not allowed');
+        consoleError('Invalid Argument : Field type is not allowed');
         return false;
     }
     return true;
@@ -248,4 +249,8 @@ function formatFieldsParamInArray(fields){
     });
 
     return (!err)? false : result;
+}
+
+function consoleError(msg){
+    return console.error(cliStyles.red + msg + cliStyles.reset);
 }
