@@ -1,3 +1,4 @@
+var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/{controllerName}.js');
 
@@ -35,3 +36,5 @@ router.put('/:id', function(req, res) {
 router.delete('/:id', function(req, res) {
     controller.remove(req, res);
 });
+
+module.exports = router;
