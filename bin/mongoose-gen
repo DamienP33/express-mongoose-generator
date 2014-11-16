@@ -83,15 +83,19 @@ function runInteractiveMode(path){
                     });
             },
             rest: function (cb) {
-                askQuestion('Generate Rest ? [true] : ', isRestParamValid, function(rest){
-                    rest = (rest.trim().length === 0) ? true : rest;
+                askQuestion('Generate Rest ? [yes] : ', isRestParamValid, function(rest){
+                    rest = (rest.trim().length === 0) ? 'yes' : rest;
                     cb(null, rest);
                 });
             }
         },
         function(err, results){
             generators.generateModel(path, results.name, results.fields);
-            generators.generateRouter(path, results.name);
+
+            if(results.rest == 'yes'){
+                generators.generateRouter(path, results.name);
+                generators.generateController(path, results.name, results.fields);
+            }
 
             closeProgram();
     });
@@ -109,7 +113,11 @@ function runNonInteractiveMode(path){
     if(!modelFields){ closeProgram(); return ;}
 
     generators.generateModel(path, modelName, modelFields);
-    generators.generateRouter(path, modelName);
+
+    if(program.rest){
+        generators.generateRouter(path, modelName);
+        generators.generateController(path, modelName, modelFields);
+    }
 
     closeProgram();
 }
@@ -173,8 +181,8 @@ function isFieldTypeParamValid(fieldType){
  * @returns {boolean} is validated
  */
 function isRestParamValid(param){
-    if(!param || param.trim().length === 0){ param = 'true'; } // default value
-    if(param !== 'true' && param !== 'false'){
+    if(!param || param.trim().length === 0){ param = 'yes'; } // default value
+    if(param !== 'yes' && param !== 'no'){
         console.error('Argument invalid');
         return false;
     }
