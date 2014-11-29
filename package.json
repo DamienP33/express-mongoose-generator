@@ -2,20 +2,27 @@
   "name": "express-mongoose-generator",
   "version": "0.1.0",
   "description": "A mongoose model generator for Express.js 4",
-  "author": "Damien Perrier",
+  "author": "Damien Perrier <damienperrier33@gmail.com>",
   "keywords": [
-    "Mongoose",
-    "Express",
-    "Generator"
+    "mongodb",
+    "mongoose",
+    "express",
+    "generator",
+    "rest",
+    "restfull"
   ],
   "main": "bin/mongoose-gen",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec --bail --check-leaks test/"
   },
   "engines": {
     "node": ">= 0.10.0"
   },
   "license": "MIT",
+  "preferGlobal": true,
+  "bin": {
+    "mongoose-gen": "./bin/mongoose-gen"
+  },
   "dependencies": {
     "async": "^0.9.0",
     "commander": "^2.5.0"
@@ -23,6 +30,13 @@
   "devDependencies": {
     "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",
+    "nexpect": "^0.4.2",
     "rimraf": "^2.2.8"
-  }
+  },
+  "files": [
+    "LICENSE",
+    "bin/",
+    "templates/",
+    "lib/"
+  ]
 }

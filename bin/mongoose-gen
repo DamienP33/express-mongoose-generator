@@ -252,5 +252,5 @@ function formatFieldsParamInArray(fields){
 }
 
 function consoleError(msg){
-    return console.error(cliStyles.red + msg + cliStyles.reset);
+    return console.log(cliStyles.red + msg + cliStyles.reset);
 }
