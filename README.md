@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/DamienP33/express-mongoose-generator.svg)](https://travis-ci.org/DamienP33/express-mongoose-generator)
 ## express-mongoose-generator
 
 A mongoose model generator for Express.js 4
