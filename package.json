@@ -1,7 +1,7 @@
 {
   "name": "express-mongoose-generator",
-  "version": "0.1.0",
-  "description": "A mongoose model generator for Express.js 4",
+  "version": "1.0.0",
+  "description": "It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application",
   "author": "Damien Perrier <damienperrier33@gmail.com>",
   "keywords": [
     "mongodb",
