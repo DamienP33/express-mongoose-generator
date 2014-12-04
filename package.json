@@ -11,6 +11,10 @@
     "rest",
     "restfull"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DamienP33/express-mongoose-generator"
+  },
   "main": "bin/mongoose-gen",
   "scripts": {
     "test": "mocha --reporter spec --bail --check-leaks test/"
