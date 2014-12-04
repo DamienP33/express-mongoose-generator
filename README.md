@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DamienP33/express-mongoose-generator.svg)](https://travis-ci.org/DamienP33/express-mongoose-generator)
+[![Build Status](https://travis-ci.org/DamienP33/express-mongoose-generator.svg?branch=master)](https://travis-ci.org/DamienP33/express-mongoose-generator)
 # express-mongoose-generator
 
 It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application.
@@ -51,25 +51,25 @@ Generate Rest (yes/no) ? [yes] :
 
 ## Rendering
 ### Model
-models/cardModel.js :
+models/carModel.js :
 ```javascript
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var cardSchema = new Schema({
-	"door" : Number,
-	"color" : String
+var carSchema = new Schema({
+	"color" : String,
+	"door" : Number
 });
 
-module.exports = mongoose.model('card', cardSchema);
+module.exports = mongoose.model('car', carSchema);
 ```
 
 ### Router
-routes/cards.js :
+routes/cars.js :
 ```javascript
 var express = require('express');
 var router = express.Router();
-var controller = require('../controllers/cardController.js');
+var controller = require('../controllers/carController.js');
 
 /*
  * GET
@@ -110,126 +110,139 @@ module.exports = router;
 ```
 
 ### Controller
-controllers/cardController.js :
+controllers/carController.js :
 ```javascript
-var model = require('../models/cardModel.js');
+var model = require('../models/carModel.js');
 
 /**
- * cardController.js
+ * carController.js
  *
- * @description :: Server-side logic for managing cards.
+ * @description :: Server-side logic for managing cars.
  */
 module.exports = {
 
     /**
-     * cardController.list()
+     * carController.list()
      */
     list: function(req, res) {
-        model.find(function(err, cards){
+        model.find(function(err, cars){
             if(err) {
                 return res.json(500, {
-                    message: 'Error getting card.'
+                    message: 'Error getting car.'
                 });
             }
-            return res.json(cards);
+            return res.json(cars);
         });
     },
 
     /**
-     * cardController.show()
+     * carController.show()
      */
     show: function(req, res) {
         var id = req.params.id;
-        model.findOne({_id: id}, function(err, card){
+        model.findOne({_id: id}, function(err, car){
             if(err) {
                 return res.json(500, {
-                    message: 'Error getting card.'
+                    message: 'Error getting car.'
                 });
             }
-            if(!card) {
+            if(!car) {
                 return res.json(404, {
-                    message: 'No such card'
+                    message: 'No such car'
                 });
             }
-            return res.json(card);
+            return res.json(car);
         });
     },
 
     /**
-     * cardController.create()
+     * carController.create()
      */
     create: function(req, res) {
-        var card = new model({
-			door : req.body.door,
-			color : req.body.color
+        var car = new model({
+			color : req.body.color,
+			door : req.body.door
         });
 
-        card.save(function(err, card){
+        car.save(function(err, car){
             if(err) {
                 return res.json(500, {
-                    message: 'Error saving card',
+                    message: 'Error saving car',
                     error: err
                 });
             }
             return res.json({
                 message: 'saved',
-                _id: card._id
+                _id: car._id
             });
         });
     },
 
     /**
-     * cardController.update()
+     * carController.update()
      */
     update: function(req, res) {
         var id = req.params.id;
-        model.findOne({_id: id}, function(err, card){
+        model.findOne({_id: id}, function(err, car){
             if(err) {
                 return res.json(500, {
-                    message: 'Error saving card',
+                    message: 'Error saving car',
                     error: err
                 });
             }
-            if(!card) {
+            if(!car) {
                 return res.json(404, {
-                    message: 'No such card'
+                    message: 'No such car'
                 });
             }
 
-            card.door =  req.body.door ? req.body.door : card.door;
-			card.color =  req.body.color ? req.body.color : card.color;
+            car.color =  req.body.color ? req.body.color : car.color;
+			car.door =  req.body.door ? req.body.door : car.door;
 			
-            card.save(function(err, card){
+            car.save(function(err, car){
                 if(err) {
                     return res.json(500, {
-                        message: 'Error getting card.'
+                        message: 'Error getting car.'
                     });
                 }
-                if(!card) {
+                if(!car) {
                     return res.json(404, {
-                        message: 'No such card'
+                        message: 'No such car'
                     });
                 }
-                return res.json(card);
+                return res.json(car);
             });
         });
     },
 
     /**
-     * cardController.remove()
+     * carController.remove()
      */
     remove: function(req, res) {
         var id = req.params.id;
-        model.findByIdAndRemove(id, function(err, card){
+        model.findByIdAndRemove(id, function(err, car){
             if(err) {
                 return res.json(500, {
-                    message: 'Error getting card.'
+                    message: 'Error getting car.'
                 });
             }
-            return res.json(card);
+            return res.json(car);
         });
     }
 };
+```
+
+You then only have to add router in app.js file and MongoDB connection whit Mongoose.
+app.js :
+```javascript
+var routes = require('./routes/index');
+var cars = require('./routes/cars');
+ ...
+
+app.use('/', routes);
+app.use('/cars', cars);
+ ...
+ 
 ```
 
 ## Licence
