@@ -30,6 +30,12 @@ $ mongoose-gen -m car -f carDoor:number,color -r
   - date
   - boolean
   - array
+  - objectid
+
+Note about the ObjectId type:
+the `objectid` type stores a `_id`.
+When created, it will prompt for a `ref` value.
+The `ref` is the name of the model that contains the doc with the provided `_id` value. (See example bellow)
 
 ### Interactive mode
 
@@ -42,6 +48,9 @@ Field Name (press <return> to stop adding fields) : door
 Field Type [string] : number
 Field Name (press <return> to stop adding fields) : color
 Field Type [string] : 
+Field Name (press <return> to stop adding fields) : owner
+Field Type [string] : objectid
+Ref (model name refered by the objectid field): user
 Field Name (press <return> to stop adding fields) : 
 Generate Rest (yes/no) ? [yes] : 
         create: ./models/cardModel.js
@@ -59,6 +68,10 @@ var Schema   = mongoose.Schema;
 var carSchema = new Schema({
 	"color" : String,
 	"door" : Number
+    "owner": {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'user'
+    }
 });
 
 module.exports = mongoose.model('car', carSchema);
