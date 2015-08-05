@@ -69,6 +69,7 @@ function runInteractiveMode(path){
                                 type: function(cb){
                                     askQuestion('Field Type [string] : ', isFieldTypeParamValid, function(fieldType){
                                         fieldType = (fieldType.trim().length === 0) ? 'string' : fieldType;
+                                        currentField.type = fieldType;
                                         cb(null, fieldType);
                                     });
                                 },
