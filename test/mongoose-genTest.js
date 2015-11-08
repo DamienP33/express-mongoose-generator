@@ -9,7 +9,7 @@ var binPath = path.resolve(__dirname, '../bin/mongoose-gen');
 var tempDir = path.resolve(__dirname, '../temp');
 
 var cliPhrases = {
-    availableType: 'Available types : string,number,date,boolean,array,objectId',
+    availableType: 'Available types : string, number, date, boolean, array, objectId',
     questionModelName: 'Model Name : ',
     questionFieldName: 'Field Name (press <return> to stop adding fields) : ',
     questionFieldType: 'Field Type [string] : ',

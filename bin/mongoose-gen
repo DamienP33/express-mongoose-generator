@@ -103,37 +103,63 @@ function runInteractiveMode(path){
                 });
             }
         },
-        function(err, results){
-            generators.generateModel(path, results.name, results.fields);
-
-            if(results.rest == 'yes'){
-                generators.generateRouter(path, results.name);
-                generators.generateController(path, results.name, results.fields);
+        function(err, results) {
+            if (err) {
+                return closeProgram();
             }
 
-            closeProgram();
-    });
+            async.parallel([
+                    function(cb){
+                        generators.generateModel(path, results.name, results.fields, cb);
+                    },
+                    function(cb){
+                        if (results.rest !== 'yes') { return cb(); }
+                        generators.generateRouter(path, results.name, cb);
+                    }            ,
+                    function(cb){
+                        if (results.rest !== 'yes') { return cb(); }
+                        generators.generateController(path, results.name, results.fields, cb);
+                    }
+                ],
+                function(err, results){
+                    closeProgram();
+                }
+            );
+        }
+    );
 }
 
 /**
  * Get parameters in non-interactive mode
  * @param path {string} destination path
  */
-function runNonInteractiveMode(path){
-    if(!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)){ closeProgram(); return ; }
+function runNonInteractiveMode(path) {
+    if (!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)) {
+        return closeProgram();
+    }
 
     var modelName = program.model;
     var modelFields = formatFieldsParamInArray(program.fields);
-    if(!modelFields){ closeProgram(); return ;}
 
-    generators.generateModel(path, modelName, modelFields);
+    if (!modelFields) { return closeProgram(); }
 
-    if(program.rest){
-        generators.generateRouter(path, modelName);
-        generators.generateController(path, modelName, modelFields);
-    }
-
-    closeProgram();
+    async.parallel([
+            function(cb){
+                generators.generateModel(path, modelName, modelFields, cb);
+            },
+            function(cb){
+                if (!program.rest) { return cb(); }
+                    generators.generateRouter(path, modelName, cb);
+            }            ,
+            function(cb){
+                if (!program.rest) { return cb(); }
+                generators.generateController(path, modelName, modelFields, cb);
+            }
+        ],
+        function(err, results){
+            closeProgram();
+        }
+    );
 }
 
 /**
@@ -160,6 +186,7 @@ function askQuestion(question, validate, callback){
  */
 function closeProgram(){
     rl.close();
+    process.exit();
 }
 
 /**
