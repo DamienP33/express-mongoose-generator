@@ -1,15 +1,21 @@
 {
   "name": "express-mongoose-generator",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application",
   "author": "Damien Perrier <damienperrier33@gmail.com>",
+  "contributors": [
+    "romuloctba"
+  ],
   "keywords": [
     "mongodb",
     "mongoose",
     "express",
     "generator",
     "rest",
-    "restfull"
+    "restfull",
+    "api",
+    "app",
+    "web"
   ],
   "repository": {
     "type": "git",
