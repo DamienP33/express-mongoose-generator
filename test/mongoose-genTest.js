@@ -8,6 +8,16 @@ var nexpect = require('nexpect');
 var binPath = path.resolve(__dirname, '../bin/mongoose-gen');
 var tempDir = path.resolve(__dirname, '../temp');
 
+var cliPhrases = {
+    availableType: 'Available types : string,number,date,boolean,array,objectId',
+    questionModelName: 'Model Name : ',
+    questionFieldName: 'Field Name (press <return> to stop adding fields) : ',
+    questionFieldType: 'Field Type [string] : ',
+    questionGenerateRest: 'Generate Rest (yes/no) ? [yes] : ',
+    errorModelName: 'Argument required : Model name',
+    errorTypeArgument: 'Invalid Argument : Field type is not allowed',
+    errorRestArgument: 'Argument invalid : rest'
+};
 
 describe('mongoose-gen', function(){
     describe('Non-interactive mode', function(){
@@ -119,20 +129,20 @@ describe('mongoose-gen', function(){
 
                 it('Should print instructions', function(done){
                     nexpect.spawn(binPath, { cwd: dir })
-                        .expect('Model Name : ')
+                        .expect(cliPhrases.questionModelName)
                         .sendline('modelName')
-                        .expect('Available types : string, number, date, boolean, array')
-                        .expect('Field Name (press <return> to stop adding fields) : ')
+                        .expect(cliPhrases.availableType)
+                        .expect(cliPhrases.questionFieldName)
                         .sendline('fieldName1')
-                        .expect('Field Type [string] : ')
+                        .expect(cliPhrases.questionFieldType)
                         .sendline('string')
-                        .expect('Field Name (press <return> to stop adding fields) : ')
+                        .expect(cliPhrases.questionFieldName)
                         .sendline('fieldName2')
-                        .expect('Field Type [string] : ')
+                        .expect(cliPhrases.questionFieldType)
                         .sendline('\r')
-                        .expect('Field Name (press <return> to stop adding fields) : ')
+                        .expect(cliPhrases.questionFieldName)
                         .sendline('\r')
-                        .expect('Generate Rest (yes/no) ? [yes] : ')
+                        .expect(cliPhrases.questionGenerateRest)
                         .sendline('no')
                         .sendEof()
                         .run(function(err, stdout, exitcod){
@@ -167,20 +177,20 @@ describe('mongoose-gen', function(){
 
                 it('Should print instructions', function(done){
                     nexpect.spawn(binPath, { cwd: dir })
-                        .expect('Model Name : ')
+                        .expect(cliPhrases.questionModelName)
                         .sendline('modelName')
-                        .expect('Available types : string, number, date, boolean, array')
-                        .expect('Field Name (press <return> to stop adding fields) : ')
+                        .expect(cliPhrases.availableType)
+                        .expect(cliPhrases.questionFieldName)
                         .sendline('fieldName1')
-                        .expect('Field Type [string] : ')
+                        .expect(cliPhrases.questionFieldType)
                         .sendline('string')
-                        .expect('Field Name (press <return> to stop adding fields) : ')
+                        .expect(cliPhrases.questionFieldName)
                         .sendline('fieldName2')
-                        .expect('Field Type [string] : ')
+                        .expect(cliPhrases.questionFieldType)
                         .sendline('\r')
-                        .expect('Field Name (press <return> to stop adding fields) : ')
+                        .expect(cliPhrases.questionFieldName)
                         .sendline('\r')
-                        .expect('Generate Rest (yes/no) ? [yes] : ')
+                        .expect(cliPhrases.questionGenerateRest)
                         .sendline('yes')
                         .sendEof()
                         .run(function(err, stdout, exitcod){
@@ -212,13 +222,13 @@ describe('mongoose-gen', function(){
         describe('Error execution', function(){
             it('Require model arg, should print error', function(done){
                 nexpect.spawn(binPath)
-                    .expect('Model Name : ')
+                    .expect(cliPhrases.questionModelName)
                     .sendline('')
-                    .expect('Argument required : Model name')
-                    .expect('Model Name : ')
+                    .expect(cliPhrases.errorModelName)
+                    .expect(cliPhrases.questionModelName)
                     .sendline('  ')
-                    .expect('Argument required : Model name')
-                    .expect('Model Name : ')
+                    .expect(cliPhrases.errorModelName)
+                    .expect(cliPhrases.questionModelName)
                     .sendline("process.exit()")
                     .sendEof()
                     .run(function(err, stdout, exitcod){
@@ -229,15 +239,15 @@ describe('mongoose-gen', function(){
             });
             it('Field type is not allowed, should print error', function(done){
                 nexpect.spawn(binPath)
-                    .expect('Model Name : ')
+                    .expect(cliPhrases.questionModelName)
                     .sendline('modelName')
-                    .expect('Available types : string, number, date, boolean, array')
-                    .expect('Field Name (press <return> to stop adding fields) : ')
+                    .expect(cliPhrases.availableType)
+                    .expect(cliPhrases.questionFieldName)
                     .sendline('fieldName1')
-                    .expect('Field Type [string] : ')
+                    .expect(cliPhrases.questionFieldType)
                     .sendline('foo')
-                    .expect('Invalid Argument : Field type is not allowed')
-                    .expect('Field Type [string] : ')
+                    .expect(cliPhrases.errorTypeArgument)
+                    .expect(cliPhrases.questionFieldType)
                     .sendline("process.exit()")
                     .sendEof()
                     .run(function(err, stdout, exitcod){
@@ -248,23 +258,23 @@ describe('mongoose-gen', function(){
             });
             it('Rest arg no valid, should print error', function(done){
                 nexpect.spawn(binPath)
-                    .expect('Model Name : ')
+                    .expect(cliPhrases.questionModelName)
                     .sendline('modelName')
-                    .expect('Available types : string, number, date, boolean, array')
-                    .expect('Field Name (press <return> to stop adding fields) : ')
+                    .expect(cliPhrases.availableType)
+                    .expect(cliPhrases.questionFieldName)
                     .sendline('fieldName1')
-                    .expect('Field Type [string] : ')
+                    .expect(cliPhrases.questionFieldType)
                     .sendline('string')
-                    .expect('Field Name (press <return> to stop adding fields) : ')
+                    .expect(cliPhrases.questionFieldName)
                     .sendline('fieldName2')
-                    .expect('Field Type [string] : ')
+                    .expect(cliPhrases.questionFieldType)
                     .sendline('\r')
                     .expect('Field Name (press <return> to stop adding fields) : ')
                     .sendline('\r')
-                    .expect('Generate Rest (yes/no) ? [yes] : ')
+                    .expect(cliPhrases.questionGenerateRest)
                     .sendline('foo')
-                    .expect('Argument invalid : rest')
-                    .expect('Generate Rest (yes/no) ? [yes] : ')
+                    .expect(cliPhrases.errorRestArgument)
+                    .expect(cliPhrases.questionGenerateRest)
                     .sendline("process.exit()")
                     .sendEof()
                     .run(function(err, stdout, exitcod){
@@ -344,34 +354,37 @@ function parseCreatedFiles(output, dir) {
 
 function run(dir, args, callback) {
     var argv = [binPath].concat(args);
-    var chunks = [];
     var exec = process.argv[0];
-    var stderr = [];
+
+    var stdout = '';
+    var stderr = '';
 
     var child = spawn(exec, argv, {
         cwd: dir
     });
 
+    child.stdout.setEncoding('utf8');
     child.stdout.on('data', function ondata(chunk) {
-        chunks.push(chunk);
+        stdout += chunk;
     });
+
+    child.stderr.setEncoding('utf8');
     child.stderr.on('data', function ondata(chunk) {
-        stderr.push(chunk);
+        stderr += chunk;
     });
 
     child.on('error', callback);
-    child.on('exit', function onexit() {
+
+    child.on('close', function onclose(code) {
         var err = null;
-        var stdout = Buffer.concat(chunks)
-            .toString('utf8')
-            .replace(/\x1b\[(\d+)m/g, '_color_$1_');
 
         try {
-            assert.equal(Buffer.concat(stderr).toString('utf8'), '');
+            assert.equal(stderr, '');
+            assert.strictEqual(code, 0);
         } catch (e) {
+            console.log(err);
             err = e;
         }
-
-        callback(err, stdout);
+        callback(err, stdout.replace(/\x1b\[(\d+)m/g, '_color_$1_'));
     });
 }
