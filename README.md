@@ -30,23 +30,27 @@ $ mongoose-gen -m car -f carDoor:number,color -r
   - date
   - boolean
   - array
+  - objectId
 
 ### Interactive mode
 
 Generates a Mongoose model, a REST controller and Express router :
 ```bash
 $ mongoose-gen
-Model Name : card
+Model Name : car
 Available types : string, number, date, boolean, array
 Field Name (press <return> to stop adding fields) : door
 Field Type [string] : number
 Field Name (press <return> to stop adding fields) : color
 Field Type [string] : 
+Field Name (press <return> to stop adding fields) : owner
+Field Type [string] : objectId
+Reference (model name referred by the objectId field) : User
 Field Name (press <return> to stop adding fields) : 
 Generate Rest (yes/no) ? [yes] : 
-        create: ./models/cardModel.js
-        create: ./routes/cards.js
-        create: ./controllers/cardController.js
+        create: ./models/carModel.js
+        create: ./routes/cars.js
+        create: ./controllers/carController.js
 ```
 
 ## Rendering
@@ -58,7 +62,11 @@ var Schema   = mongoose.Schema;
 
 var carSchema = new Schema({
 	"color" : String,
-	"door" : Number
+	"door" : Number,
+    "owner" : {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 module.exports = mongoose.model('car', carSchema);
@@ -69,41 +77,41 @@ routes/cars.js :
 ```javascript
 var express = require('express');
 var router = express.Router();
-var controller = require('../controllers/carController.js');
+var carController = require('../controllers/carController.js');
 
 /*
  * GET
  */
 router.get('/', function(req, res) {
-    controller.list(req, res);
+    carController.list(req, res);
 });
 
 /*
  * GET
  */
 router.get('/:id', function(req, res) {
-    controller.show(req, res);
+    carController.show(req, res);
 });
 
 /*
  * POST
  */
 router.post('/', function(req, res) {
-    controller.create(req, res);
+    carController.create(req, res);
 });
 
 /*
  * PUT
  */
 router.put('/:id', function(req, res) {
-    controller.update(req, res);
+    carController.update(req, res);
 });
 
 /*
  * DELETE
  */
 router.delete('/:id', function(req, res) {
-    controller.remove(req, res);
+    carController.remove(req, res);
 });
 
 module.exports = router;
@@ -112,7 +120,7 @@ module.exports = router;
 ### Controller
 controllers/carController.js :
 ```javascript
-var model = require('../models/carModel.js');
+var carModel = require('../models/carModel.js');
 
 /**
  * carController.js
@@ -125,7 +133,7 @@ module.exports = {
      * carController.list()
      */
     list: function(req, res) {
-        model.find(function(err, cars){
+        carModel.find(function(err, cars){
             if(err) {
                 return res.json(500, {
                     message: 'Error getting car.'
@@ -140,7 +148,7 @@ module.exports = {
      */
     show: function(req, res) {
         var id = req.params.id;
-        model.findOne({_id: id}, function(err, car){
+        carModel.findOne({_id: id}, function(err, car){
             if(err) {
                 return res.json(500, {
                     message: 'Error getting car.'
@@ -159,7 +167,7 @@ module.exports = {
      * carController.create()
      */
     create: function(req, res) {
-        var car = new model({
+        var car = new carModel({
 			color : req.body.color,
 			door : req.body.door
         });
@@ -183,7 +191,7 @@ module.exports = {
      */
     update: function(req, res) {
         var id = req.params.id;
-        model.findOne({_id: id}, function(err, car){
+        carModel.findOne({_id: id}, function(err, car){
             if(err) {
                 return res.json(500, {
                     message: 'Error saving car',
@@ -220,7 +228,7 @@ module.exports = {
      */
     remove: function(req, res) {
         var id = req.params.id;
-        model.findByIdAndRemove(id, function(err, car){
+        carModel.findByIdAndRemove(id, function(err, car){
             if(err) {
                 return res.json(500, {
                     message: 'Error getting car.'
