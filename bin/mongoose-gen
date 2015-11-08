@@ -17,7 +17,7 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
-var allowedFieldsTypes = ['string', 'number', 'date', 'boolean', 'array'];
+var allowedFieldsTypes = ['string', 'number', 'date', 'boolean', 'array', 'objectId'];
 
 // CLI
 program
@@ -45,13 +45,16 @@ function runInteractiveMode(path){
     async.series({
             name: function (cb){
                 askQuestion('Model Name : ', isModelNameParamValid, function (name){
-                    console.log(cliStyles.green + 'Available types : string, number, date, boolean, array' + cliStyles.reset);
+                    console.log(cliStyles.green + 'Available types : '
+                        + allowedFieldsTypes.toString().split(',').join(', ') + cliStyles.reset
+                    );
                     cb(null, name);
                 });
             },
             fields: function (cb){
                 var exit   = false;
                 var fields = [];
+                var currentField = {};
 
                 async.whilst(
                     function(){ return !exit; },
@@ -67,9 +70,19 @@ function runInteractiveMode(path){
                                 },
                                 type: function(cb){
                                     askQuestion('Field Type [string] : ', isFieldTypeParamValid, function(fieldType){
-                                        fieldType = (fieldType.trim().length === 0) ? 'string' : fieldType;
-                                        cb(null, fieldType);
+                                        currentField.type = (fieldType.trim().length === 0) ? 'string' : fieldType;
+                                        cb(null, currentField.type);
                                     });
+                                },
+                                reference: function(cb){
+                                    if (currentField.type === 'objectId') {
+                                        askQuestion('Reference (model name referred by the objectId field) : ', null, function(referenceName){
+                                            referenceName = (referenceName.trim().length === 0) ? 'INSERT_YOUR_REFERENCE_NAME_HERE' : referenceName;
+                                            cb(null, referenceName);
+                                        });
+                                    } else {
+                                        cb(null, null);
+                                    }
                                 }
                             },
                             function (err, results){
