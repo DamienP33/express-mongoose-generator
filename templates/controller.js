@@ -1,4 +1,4 @@
-var model = require('../models/{modelName}.js');
+var {modelName} = require('../models/{modelName}.js');
 
 /**
  * {controllerName}.js
@@ -11,7 +11,7 @@ module.exports = {
      * {controllerName}.list()
      */
     list: function(req, res) {
-        model.find(function(err, {pluralName}){
+        {modelName}.find(function(err, {pluralName}){
             if(err) {
                 return res.json(500, {
                     message: 'Error getting {name}.'
@@ -26,7 +26,7 @@ module.exports = {
      */
     show: function(req, res) {
         var id = req.params.id;
-        model.findOne({_id: id}, function(err, {name}){
+        {modelName}.findOne({_id: id}, function(err, {name}){
             if(err) {
                 return res.json(500, {
                     message: 'Error getting {name}.'
@@ -45,7 +45,7 @@ module.exports = {
      * {controllerName}.create()
      */
     create: function(req, res) {
-        var {name} = new model({{createFields}
+        var {name} = new {modelName}({{createFields}
         });
 
         {name}.save(function(err, {name}){
@@ -67,7 +67,7 @@ module.exports = {
      */
     update: function(req, res) {
         var id = req.params.id;
-        model.findOne({_id: id}, function(err, {name}){
+        {modelName}.findOne({_id: id}, function(err, {name}){
             if(err) {
                 return res.json(500, {
                     message: 'Error saving {name}',
@@ -102,7 +102,7 @@ module.exports = {
      */
     remove: function(req, res) {
         var id = req.params.id;
-        model.findByIdAndRemove(id, function(err, {name}){
+        {modelName}.findByIdAndRemove(id, function(err, {name}){
             if(err) {
                 return res.json(500, {
                     message: 'Error getting {name}.'
