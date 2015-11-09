@@ -23,7 +23,8 @@
   },
   "main": "bin/mongoose-gen",
   "scripts": {
-    "test": "mocha --reporter spec --bail --check-leaks test/"
+    "test": "mocha --reporter spec --bail --check-leaks test/",
+    "lint": "jshint ./**/*.js"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -38,6 +39,7 @@
     "commander": "^2.5.0"
   },
   "devDependencies": {
+    "jshint": "^2.8.0",
     "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",
     "nexpect": "^0.4.2",
