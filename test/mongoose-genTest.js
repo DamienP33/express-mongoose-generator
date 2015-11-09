@@ -229,7 +229,7 @@ describe('mongoose-gen', function(){
                     .sendline('  ')
                     .expect(cliPhrases.errorModelName)
                     .expect(cliPhrases.questionModelName)
-                    .sendline("process.exit()")
+                    .sendline('process.exit()')
                     .sendEof()
                     .run(function(err, stdout, exitcod){
                         if(err){ return done(err); }
@@ -248,7 +248,7 @@ describe('mongoose-gen', function(){
                     .sendline('foo')
                     .expect(cliPhrases.errorTypeArgument)
                     .expect(cliPhrases.questionFieldType)
-                    .sendline("process.exit()")
+                    .sendline('process.exit()')
                     .sendEof()
                     .run(function(err, stdout, exitcod){
                         if(err){ return done(err); }
@@ -275,7 +275,7 @@ describe('mongoose-gen', function(){
                     .sendline('foo')
                     .expect(cliPhrases.errorRestArgument)
                     .expect(cliPhrases.questionGenerateRest)
-                    .sendline("process.exit()")
+                    .sendline('process.exit()')
                     .sendEof()
                     .run(function(err, stdout, exitcod){
                         if(err){ return done(err); }
@@ -322,7 +322,7 @@ function createEnvironment(callback) {
     var dir = path.join(tempDir, ('app-' + num));
 
     mkdirp(dir, function ondir(err) {
-        if (err) return callback(err);
+        if (err) { return callback(err); }
         callback(null, dir);
     });
 }
