@@ -10,9 +10,9 @@ module.exports = {
     /**
      * {controllerName}.list()
      */
-    list: function(req, res) {
-        {modelName}.find(function(err, {pluralName}){
-            if(err) {
+    list: function (req, res) {
+        {modelName}.find(function (err, {pluralName}) {
+            if (err) {
                 return res.json(500, {
                     message: 'Error getting {name}.'
                 });
@@ -24,15 +24,15 @@ module.exports = {
     /**
      * {controllerName}.show()
      */
-    show: function(req, res) {
+    show: function (req, res) {
         var id = req.params.id;
-        {modelName}.findOne({_id: id}, function(err, {name}){
-            if(err) {
+        {modelName}.findOne({_id: id}, function (err, {name}) {
+            if (err) {
                 return res.json(500, {
                     message: 'Error getting {name}.'
                 });
             }
-            if(!{name}) {
+            if (!{name}) {
                 return res.json(404, {
                     message: 'No such {name}'
                 });
@@ -44,12 +44,12 @@ module.exports = {
     /**
      * {controllerName}.create()
      */
-    create: function(req, res) {
+    create: function (req, res) {
         var {name} = new {modelName}({{createFields}
         });
 
-        {name}.save(function(err, {name}){
-            if(err) {
+        {name}.save(function (err, {name}) {
+            if (err) {
                 return res.json(500, {
                     message: 'Error saving {name}',
                     error: err
@@ -65,29 +65,29 @@ module.exports = {
     /**
      * {controllerName}.update()
      */
-    update: function(req, res) {
+    update: function (req, res) {
         var id = req.params.id;
-        {modelName}.findOne({_id: id}, function(err, {name}){
-            if(err) {
+        {modelName}.findOne({_id: id}, function (err, {name}) {
+            if (err) {
                 return res.json(500, {
                     message: 'Error saving {name}',
                     error: err
                 });
             }
-            if(!{name}) {
+            if (!{name}) {
                 return res.json(404, {
                     message: 'No such {name}'
                 });
             }
 
             {updateFields}
-            {name}.save(function(err, {name}){
-                if(err) {
+            {name}.save(function (err, {name}) {
+                if (err) {
                     return res.json(500, {
                         message: 'Error getting {name}.'
                     });
                 }
-                if(!{name}) {
+                if (!{name}) {
                     return res.json(404, {
                         message: 'No such {name}'
                     });
@@ -100,10 +100,10 @@ module.exports = {
     /**
      * {controllerName}.remove()
      */
-    remove: function(req, res) {
+    remove: function (req, res) {
         var id = req.params.id;
-        {modelName}.findByIdAndRemove(id, function(err, {name}){
-            if(err) {
+        {modelName}.findByIdAndRemove(id, function (err, {name}) {
+            if (err) {
                 return res.json(500, {
                     message: 'Error getting {name}.'
                 });
