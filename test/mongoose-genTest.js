@@ -19,48 +19,48 @@ var cliPhrases = {
     errorRestArgument: 'Argument invalid : rest'
 };
 
-describe('mongoose-gen', function(){
-    describe('Non-interactive mode', function(){
-        describe('Error execution', function(){
-            it('Require model arg, should print error', function(done){
-                run('', ['-f', 'foo'], function (err, stdout){
+describe('mongoose-gen', function () {
+    describe('Non-interactive mode', function () {
+        describe('Error execution', function () {
+            it('Require model arg, should print error', function (done) {
+                run('', ['-f', 'foo'], function (err, stdout) {
                     assert.ok(/Argument required : Model name/.test(stdout));
                     done();
                 });
             });
-            it('Require field arg, should print error', function(done){
-                run('', ['-m', 'foo'], function (err, stdout){
+            it('Require field arg, should print error', function (done) {
+                run('', ['-m', 'foo'], function (err, stdout) {
                     assert.ok(/Argument required : fields/.test(stdout));
                     done();
                 });
             });
-            it('Field type is not allowed, should print error', function(done){
-                run('', ['-m', 'foo', '-f', 'foo:str'], function (err, stdout){
+            it('Field type is not allowed, should print error', function(done) {
+                run('', ['-m', 'foo', '-f', 'foo:str'], function (err, stdout) {
                     assert.ok(/Invalid Argument : Field type is not allowed/.test(stdout));
                     done();
                 });
             });
         });
 
-        describe('Normal execution', function(){
-            describe('Basic usage', function(){
+        describe('Normal execution', function () {
+            describe('Basic usage', function () {
                 var dir;
 
-                before(function(done){
-                    createEnvironment(function(err, newDir){
-                        if(err){ return done(err); }
+                before(function (done) {
+                    createEnvironment(function (err, newDir) {
+                        if (err) { return done(err); }
                         dir = newDir;
                         done();
                     });
                 });
-                after(function(done){
+                after(function(done) {
                     this.timeout(300000);
                     cleanup(dir, done);
                 });
 
-                it('Should have mongoose model file', function(done){
-                    run(dir, ['-m', 'modelName', '-f', 'fieldName:number'], function (err, stdout){
-                        if(err){ return done(err); }
+                it('Should have mongoose model file', function (done) {
+                    run(dir, ['-m', 'modelName', '-f', 'fieldName:number'], function (err, stdout) {
+                        if (err) { return done(err); }
                         var files = parseCreatedFiles(stdout, dir);
                         assert.equal(files.length, 2);
                         assert.notEqual(files.indexOf('models/modelNameModel.js'), -1);
@@ -69,39 +69,39 @@ describe('mongoose-gen', function(){
                 });
             });
 
-            describe('-r', function(){
+            describe('-r', function () {
                 var files;
                 var dir;
 
-                before(function(done){
-                    createEnvironment(function(err, newDir){
-                        if(err){ return done(err); }
+                before(function (done) {
+                    createEnvironment(function (err, newDir) {
+                        if (err) { return done(err); }
                         dir = newDir;
                         done();
                     });
                 });
-                after(function(done){
+                after(function (done) {
                     this.timeout(300000);
                     cleanup(dir, done);
                 });
 
-                it('Should have basic directory', function(done){
-                    run(dir, ['-m', 'modelName', '-f', 'fieldName:number', '-r'], function(err, stdout){
-                        if(err){ return done(err); }
+                it('Should have basic directory', function (done) {
+                    run(dir, ['-m', 'modelName', '-f', 'fieldName:number', '-r'], function (err, stdout) {
+                        if (err) { return done(err); }
                         files = parseCreatedFiles(stdout, dir);
                         assert.equal(files.length, 6);
                         done();
                     });
                 });
-                it('Should have model file', function(done){
+                it('Should have model file', function (done) {
                     assert.notEqual(files.indexOf('models/modelNameModel.js'), -1);
                     done();
                 });
-                it('Should have controller file', function(done){
+                it('Should have controller file', function (done) {
                     assert.notEqual(files.indexOf('controllers/modelNameController.js'), -1);
                     done();
                 });
-                it('Should have router file', function(done){
+                it('Should have router file', function (done) {
                     assert.notEqual(files.indexOf('routes/modelNames.js'), -1);
                     done();
                 });
@@ -109,26 +109,26 @@ describe('mongoose-gen', function(){
         });
     });
 
-    describe('Interactive mode', function(){
-        describe('Normal execution', function(){
-            describe('Basic usage', function(){
+    describe('Interactive mode', function () {
+        describe('Normal execution', function () {
+            describe('Basic usage', function () {
                 var dir;
                 var files;
 
-                before(function(done){
-                    createEnvironment(function(err, newDir){
-                        if(err){ return done(err); }
+                before(function (done) {
+                    createEnvironment(function (err, newDir) {
+                        if (err) { return done(err); }
                         dir = newDir;
                         done();
                     });
                 });
-                after(function(done){
+                after(function (done) {
                     this.timeout(300000);
                     cleanup(dir, done);
                 });
 
-                it('Should print instructions', function(done){
-                    nexpect.spawn(binPath, { cwd: dir })
+                it('Should print instructions', function (done) {
+                    nexpect.spawn(binPath, {cwd: dir})
                         .expect(cliPhrases.questionModelName)
                         .sendline('modelName')
                         .expect(cliPhrases.availableType)
@@ -145,38 +145,38 @@ describe('mongoose-gen', function(){
                         .expect(cliPhrases.questionGenerateRest)
                         .sendline('no')
                         .sendEof()
-                        .run(function(err, stdout, exitcod){
-                            if(err){ return done(err); }
+                        .run(function (err, stdout, exitcod) {
+                            if (err) { return done(err); }
                             assert.equal(err, null);
                             files = parseCreatedFiles(stdout, dir);
                             done();
                         });
                 });
-                it('Should have model file', function(done){
+                it('Should have model file', function (done) {
                     assert.equal(files.length, 2);
                     assert.notEqual(files.indexOf('models/modelNameModel.js'), -1);
                     done();
                 });
             });
 
-            describe('Rest', function(){
+            describe('Rest', function () {
                 var dir;
                 var files;
 
-                before(function(done){
-                    createEnvironment(function(err, newDir){
-                        if(err){ return done(err); }
+                before(function (done) {
+                    createEnvironment(function (err, newDir) {
+                        if (err) { return done(err); }
                         dir = newDir;
                         done();
                     });
                 });
-                after(function(done){
+                after(function (done) {
                     this.timeout(300000);
                     cleanup(dir, done);
                 });
 
-                it('Should print instructions', function(done){
-                    nexpect.spawn(binPath, { cwd: dir })
+                it('Should print instructions', function (done) {
+                    nexpect.spawn(binPath, {cwd: dir})
                         .expect(cliPhrases.questionModelName)
                         .sendline('modelName')
                         .expect(cliPhrases.availableType)
@@ -193,34 +193,34 @@ describe('mongoose-gen', function(){
                         .expect(cliPhrases.questionGenerateRest)
                         .sendline('yes')
                         .sendEof()
-                        .run(function(err, stdout, exitcod){
-                            if(err){ return done(err); }
+                        .run(function (err, stdout, exitcod) {
+                            if (err) { return done(err); }
                             assert.equal(err, null);
                             files = parseCreatedFiles(stdout, dir);
                             done();
                         });
                 });
-                it('Should have basic directory', function(done){
+                it('Should have basic directory', function (done) {
                     assert.equal(files.length, 6);
                     done();
                 });
-                it('Should have model file', function(done){
+                it('Should have model file', function (done) {
                     assert.notEqual(files.indexOf('models/modelNameModel.js'), -1);
                     done();
                 });
-                it('Should have controller file', function(done){
+                it('Should have controller file', function (done) {
                     assert.notEqual(files.indexOf('controllers/modelNameController.js'), -1);
                     done();
                 });
-                it('Should have router file', function(done){
+                it('Should have router file', function (done) {
                     assert.notEqual(files.indexOf('routes/modelNames.js'), -1);
                     done();
                 });
             });
         });
 
-        describe('Error execution', function(){
-            it('Require model arg, should print error', function(done){
+        describe('Error execution', function () {
+            it('Require model arg, should print error', function (done) {
                 nexpect.spawn(binPath)
                     .expect(cliPhrases.questionModelName)
                     .sendline('')
@@ -231,13 +231,13 @@ describe('mongoose-gen', function(){
                     .expect(cliPhrases.questionModelName)
                     .sendline('process.exit()')
                     .sendEof()
-                    .run(function(err, stdout, exitcod){
-                        if(err){ return done(err); }
+                    .run(function (err, stdout, exitcod) {
+                        if (err) { return done(err); }
                         assert.equal(err, null);
                         done();
                     });
             });
-            it('Field type is not allowed, should print error', function(done){
+            it('Field type is not allowed, should print error', function (done) {
                 nexpect.spawn(binPath)
                     .expect(cliPhrases.questionModelName)
                     .sendline('modelName')
@@ -250,13 +250,13 @@ describe('mongoose-gen', function(){
                     .expect(cliPhrases.questionFieldType)
                     .sendline('process.exit()')
                     .sendEof()
-                    .run(function(err, stdout, exitcod){
-                        if(err){ return done(err); }
+                    .run(function (err, stdout, exitcod) {
+                        if (err) { return done(err); }
                         assert.equal(err, null);
                         done();
                     });
             });
-            it('Rest arg no valid, should print error', function(done){
+            it('Rest arg no valid, should print error', function (done) {
                 nexpect.spawn(binPath)
                     .expect(cliPhrases.questionModelName)
                     .sendline('modelName')
@@ -277,8 +277,8 @@ describe('mongoose-gen', function(){
                     .expect(cliPhrases.questionGenerateRest)
                     .sendline('process.exit()')
                     .sendEof()
-                    .run(function(err, stdout, exitcod){
-                        if(err){ return done(err); }
+                    .run(function (err, stdout, exitcod) {
+                        if (err) { return done(err); }
                         assert.equal(err, null);
                         done();
                     });
@@ -286,9 +286,9 @@ describe('mongoose-gen', function(){
         });
     });
 
-    it('--help, should print help', function(done){
-        run('', ['--help'], function(err, stdout){
-            if(err){ return done(err); }
+    it('--help, should print help', function (done) {
+        run('', ['--help'], function (err, stdout) {
+            if (err) { return done(err); }
             assert.ok(/Usage: mongoose-gen \[options\]/.test(stdout));
             assert.ok(/--help/.test(stdout));
             assert.ok(/--version/.test(stdout));
@@ -299,7 +299,6 @@ describe('mongoose-gen', function(){
         });
     });
 });
-
 
 /*
  * Original code by TJ Holowaychuk (https://github.com/expressjs/generator/blob/master/test/cmd.js)
@@ -330,7 +329,7 @@ function createEnvironment(callback) {
 function parseCreatedFiles(output, dir) {
     var files = [];
     var lines = output;
-    if(typeof output === 'string'){
+    if (typeof output === 'string') {
         lines = output.split(/[\r\n]+/);
     }
     var match;

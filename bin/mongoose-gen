@@ -29,8 +29,8 @@ program
     .parse(process.argv);
 
 // Main program
-(function (path){
-    if(program.model || program.fields){
+(function (path) {
+    if (program.model || program.fields) {
         runNonInteractiveMode(path);
     } else {
         runInteractiveMode(path);
@@ -39,89 +39,97 @@ program
 
 /**
  * Get parameters in interactive mode
- * @param path {string} destination path
+ * @param {string} path destination path
  */
-function runInteractiveMode(path){
+function runInteractiveMode (path) {
     async.series({
-            name: function (cb){
-                askQuestion('Model Name : ', isModelNameParamValid, function (name){
-                    console.log(cliStyles.green + 'Available types : '
-                        + allowedFieldsTypes.toString().split(',').join(', ') + cliStyles.reset
+            name: function (cb) {
+                askQuestion('Model Name : ', isModelNameParamValid, function (name) {
+                    console.log(cliStyles.green + 'Available types : ' +
+                        allowedFieldsTypes.toString().split(',').join(', ') + cliStyles.reset
                     );
                     cb(null, name);
                 });
             },
-            fields: function (cb){
+            fields: function (cb) {
                 var exit   = false;
                 var fields = [];
                 var currentField = {};
 
                 async.whilst(
-                    function(){ return !exit; },
-                    function(cb){
+                    function () { return !exit; },
+                    function (cb) {
                         async.series({
-                                name: function(cb){
-                                    askQuestion('Field Name (press <return> to stop adding fields) : ', null, function(fieldName){
-                                        if(fieldName.trim().length === 0){
-                                            exit = true;
+                                name: function (cb) {
+                                    askQuestion('Field Name (press <return> to stop adding fields) : ',
+                                        null,
+                                        function (fieldName) {
+                                            if (fieldName.trim().length === 0) {
+                                                exit = true;
+                                            }
+                                            cb(exit, fieldName);
                                         }
-                                        cb(exit, fieldName);
-                                    });
+                                    );
                                 },
-                                type: function(cb){
-                                    askQuestion('Field Type [string] : ', isFieldTypeParamValid, function(fieldType){
+                                type: function (cb) {
+                                    askQuestion('Field Type [string] : ', isFieldTypeParamValid, function (fieldType) {
                                         currentField.type = (fieldType.trim().length === 0) ? 'string' : fieldType;
                                         cb(null, currentField.type);
                                     });
                                 },
-                                reference: function(cb){
+                                reference: function (cb) {
                                     if (currentField.type === 'objectId') {
-                                        askQuestion('Reference (model name referred by the objectId field) : ', null, function(referenceName){
-                                            referenceName = (referenceName.trim().length === 0) ? 'INSERT_YOUR_REFERENCE_NAME_HERE' : referenceName;
-                                            cb(null, referenceName);
-                                        });
+                                        askQuestion('Reference (model name referred by the objectId field) : ',
+                                            null,
+                                            function (referenceName) {
+                                                referenceName = (referenceName.trim().length === 0) ?
+                                                    'INSERT_YOUR_REFERENCE_NAME_HERE'
+                                                    : referenceName;
+                                                cb(null, referenceName);
+                                            }
+                                        );
                                     } else {
                                         cb(null, null);
                                     }
                                 }
                             },
-                            function (err, results){
-                                if(!err){
+                            function (err, results) {
+                                if (!err) {
                                     fields.push(results);
                                 }
                                 cb();
                             });
                     },
-                    function(err, results){
+                    function (err, results) {
                         cb(null, fields);
                     });
             },
             rest: function (cb) {
-                askQuestion('Generate Rest (yes/no) ? [yes] : ', isRestParamValid, function(rest){
+                askQuestion('Generate Rest (yes/no) ? [yes] : ', isRestParamValid, function (rest) {
                     rest = (rest.trim().length === 0) ? 'yes' : rest;
                     cb(null, rest);
                 });
             }
         },
-        function(err, results) {
+        function (err, results) {
             if (err) {
                 return closeProgram();
             }
 
             async.parallel([
-                    function(cb){
+                    function (cb) {
                         generators.generateModel(path, results.name, results.fields, cb);
                     },
-                    function(cb){
+                    function (cb) {
                         if (results.rest !== 'yes') { return cb(); }
                         generators.generateRouter(path, results.name, cb);
                     }            ,
-                    function(cb){
+                    function (cb) {
                         if (results.rest !== 'yes') { return cb(); }
                         generators.generateController(path, results.name, results.fields, cb);
                     }
                 ],
-                function(err, results){
+                function (err, results) {
                     closeProgram();
                 }
             );
@@ -131,7 +139,7 @@ function runInteractiveMode(path){
 
 /**
  * Get parameters in non-interactive mode
- * @param path {string} destination path
+ * @param {string} path destination path
  */
 function runNonInteractiveMode(path) {
     if (!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)) {
@@ -144,19 +152,19 @@ function runNonInteractiveMode(path) {
     if (!modelFields) { return closeProgram(); }
 
     async.parallel([
-            function(cb){
+            function (cb) {
                 generators.generateModel(path, modelName, modelFields, cb);
             },
-            function(cb){
+            function (cb) {
                 if (!program.rest) { return cb(); }
-                    generators.generateRouter(path, modelName, cb);
+                generators.generateRouter(path, modelName, cb);
             }            ,
-            function(cb){
+            function (cb) {
                 if (!program.rest) { return cb(); }
                 generators.generateController(path, modelName, modelFields, cb);
             }
         ],
-        function(err, results){
+        function (err, results) {
             closeProgram();
         }
     );
@@ -165,14 +173,14 @@ function runNonInteractiveMode(path) {
 /**
  * Ask a question in the console and waits for a response
  * if the answer is invalid, the question is recalled
- * @param question {string} input question in the console
- * @param validate {function} validation function (nullable)
- * @param callback {function} callback function
+ * @param {string} question input question in the console
+ * @param {function} validate validation function (nullable)
+ * @param {function} callback callback function
  */
-function askQuestion(question, validate, callback){
-    rl.question(question, function(answer){
-        if(validate){
-            if(!validate(answer)){
+function askQuestion(question, validate, callback) {
+    rl.question(question, function(answer) {
+        if (validate) {
+            if (!validate(answer)) {
                 askQuestion(question, validate, callback);
                 return ;
             }
@@ -184,18 +192,18 @@ function askQuestion(question, validate, callback){
 /**
  * Close the program
  */
-function closeProgram(){
+function closeProgram() {
     rl.close();
     process.exit();
 }
 
 /**
  * Validate model name input
- * @param name {string}
+ * @param {string} name
  * @returns {boolean} is validated
  */
-function isModelNameParamValid(name){
-    if(!name || name.trim().length === 0){
+function isModelNameParamValid(name) {
+    if (!name || name.trim().length === 0) {
         consoleError('Argument required : Model name');
         return false;
     }
@@ -204,12 +212,12 @@ function isModelNameParamValid(name){
 
 /**
  * validate field type input
- * @param fieldType {string}
+ * @param {string} fieldType
  * @returns {boolean} is validated
  */
-function isFieldTypeParamValid(fieldType){
-    if(!fieldType || fieldType.trim().length === 0){ fieldType = 'string'; } // default value
-    if(allowedFieldsTypes.indexOf(fieldType) == -1){
+function isFieldTypeParamValid(fieldType) {
+    if (!fieldType || fieldType.trim().length === 0) { fieldType = 'string'; } // default value
+    if (allowedFieldsTypes.indexOf(fieldType) == -1) {
         consoleError('Invalid Argument : Field type is not allowed');
         return false;
     }
@@ -218,12 +226,12 @@ function isFieldTypeParamValid(fieldType){
 
 /**
  * validate rest input
- * @param param {string}
+ * @param {string} param
  * @returns {boolean} is validated
  */
-function isRestParamValid(param){
-    if(!param || param.trim().length === 0){ param = 'yes'; } // default value
-    if(param !== 'yes' && param !== 'no'){
+function isRestParamValid(param) {
+    if (!param || param.trim().length === 0) { param = 'yes'; } // default value
+    if (param !== 'yes' && param !== 'no') {
         consoleError('Argument invalid : rest');
         return false;
     }
@@ -232,11 +240,11 @@ function isRestParamValid(param){
 
 /**
  * Validate fields input
- * @param fields {string}
+ * @param {string} fields
  * @returns {boolean} is validated
  */
-function isFieldsParamValid(fields){
-    if(!fields || fields.trim().length === 0){
+function isFieldsParamValid(fields) {
+    if (!fields || fields.trim().length === 0) {
         consoleError('Argument required : fields');
         return false;
     }
@@ -245,20 +253,20 @@ function isFieldsParamValid(fields){
 
 /**
  * Validate name / type of a field
- * @param fieldName {string}
- * @param fieldType {string}
+ * @param {string} fieldName
+ * @param {string} fieldType
  * @returns {boolean} is validated
  */
-function isFieldValid(fieldName, fieldType){
-    if(!fieldName || fieldName.trim().length === 0){
+function isFieldValid(fieldName, fieldType) {
+    if (!fieldName || fieldName.trim().length === 0) {
         consoleError('Argument required : Field Name');
         return false;
     }
-    if(!fieldType || fieldType.trim().length === 0){
+    if (!fieldType || fieldType.trim().length === 0) {
         consoleError('Argument required : Field type');
         return false;
     }
-    if(allowedFieldsTypes.indexOf(fieldType) == -1){
+    if (allowedFieldsTypes.indexOf(fieldType) == -1) {
         consoleError('Invalid Argument : Field type is not allowed');
         return false;
     }
@@ -267,19 +275,19 @@ function isFieldValid(fieldName, fieldType){
 
 /**
  * Format fields input in array
- * @param fields {string} fields input
+ * @param {string} fields fields input
  * @returns {Array} fields formatted
  */
-function formatFieldsParamInArray(fields){
+function formatFieldsParamInArray(fields) {
     var arrayFields = fields.split(',');
     var result = [];
 
-    var err = arrayFields.every(function(field){
+    var err = arrayFields.every(function (field) {
         var f = field.split(':');
         var fieldName = f[0];
         var fieldType = (f[1] || 'string');
 
-        if(!isFieldValid(fieldName, fieldType)){ return false; }
+        if (!isFieldValid(fieldName, fieldType)) { return false; }
 
         result.push({
             name: fieldName,
@@ -288,9 +296,9 @@ function formatFieldsParamInArray(fields){
         return true;
     });
 
-    return (!err)? false : result;
+    return (!err) ? false : result;
 }
 
-function consoleError(msg){
+function consoleError(msg) {
     return console.log(cliStyles.red + msg + cliStyles.reset);
 }
