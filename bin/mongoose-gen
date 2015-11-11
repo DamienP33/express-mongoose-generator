@@ -217,7 +217,7 @@ function isModelNameParamValid(name) {
  */
 function isFieldTypeParamValid(fieldType) {
     if (!fieldType || fieldType.trim().length === 0) { fieldType = 'string'; } // default value
-    if (allowedFieldsTypes.indexOf(fieldType) == -1) {
+    if (allowedFieldsTypes.indexOf(fieldType) === -1) {
         consoleError('Invalid Argument : Field type is not allowed');
         return false;
     }
@@ -266,7 +266,7 @@ function isFieldValid(fieldName, fieldType) {
         consoleError('Argument required : Field type');
         return false;
     }
-    if (allowedFieldsTypes.indexOf(fieldType) == -1) {
+    if (allowedFieldsTypes.indexOf(fieldType) === -1) {
         consoleError('Invalid Argument : Field type is not allowed');
         return false;
     }

@@ -24,7 +24,7 @@
     "main": "bin/mongoose-gen",
     "scripts": {
         "test": "mocha --reporter spec --bail --check-leaks test/",
-        "lint": "jshint ./**/*.js",
+        "lint": "jshint ./**/*.js ./bin/mongoose-gen",
         "cs": "jscs ./**/*.js ./bin/mongoose-gen"
     },
     "engines": {
