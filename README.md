@@ -135,7 +135,7 @@ module.exports = {
     list: function(req, res) {
         carModel.find(function(err, cars){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json({
                     message: 'Error getting car.'
                 });
             }
@@ -150,12 +150,12 @@ module.exports = {
         var id = req.params.id;
         carModel.findOne({_id: id}, function(err, car){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json({
                     message: 'Error getting car.'
                 });
             }
             if(!car) {
-                return res.json(404, {
+                return res.status(404).json({
                     message: 'No such car'
                 });
             }
@@ -174,7 +174,7 @@ module.exports = {
 
         car.save(function(err, car){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json({
                     message: 'Error saving car',
                     error: err
                 });
@@ -193,13 +193,13 @@ module.exports = {
         var id = req.params.id;
         carModel.findOne({_id: id}, function(err, car){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json({
                     message: 'Error saving car',
                     error: err
                 });
             }
             if(!car) {
-                return res.json(404, {
+                return res.status(404).json({
                     message: 'No such car'
                 });
             }
@@ -209,12 +209,12 @@ module.exports = {
 			
             car.save(function(err, car){
                 if(err) {
-                    return res.json(500, {
+                    return res.status(500).json({
                         message: 'Error getting car.'
                     });
                 }
                 if(!car) {
-                    return res.json(404, {
+                    return res.status(404).json({
                         message: 'No such car'
                     });
                 }
@@ -230,7 +230,7 @@ module.exports = {
         var id = req.params.id;
         carModel.findByIdAndRemove(id, function(err, car){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json({
                     message: 'Error getting car.'
                 });
             }
