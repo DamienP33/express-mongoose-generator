@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var {controllerName} = require('../controllers/{controllerName}.js');
+var {controllerName} = require({controllerPath});
 
 /*
  * GET

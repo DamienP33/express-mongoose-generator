@@ -14,6 +14,7 @@ var cliPhrases = {
     questionFieldName: 'Field Name (press <return> to stop adding fields) : ',
     questionFieldType: 'Field Type [string] : ',
     questionGenerateRest: 'Generate Rest (yes/no) ? [yes] : ',
+    questionGenerateMethod: 'Generate method Type or Feature (t/f) ? [t] : ',
     errorModelName: 'Argument required : Model name',
     errorTypeArgument: 'Invalid Argument : Field type is not allowed',
     errorRestArgument: 'Argument invalid : rest'
@@ -144,6 +145,8 @@ describe('mongoose-gen', function () {
                         .sendline('\r')
                         .expect(cliPhrases.questionGenerateRest)
                         .sendline('no')
+                        .expect(cliPhrases.questionGenerateMethod)
+                        .sendline('t')
                         .sendEof()
                         .run(function (err, stdout, exitcod) {
                             if (err) { return done(err); }
@@ -192,6 +195,8 @@ describe('mongoose-gen', function () {
                         .sendline('\r')
                         .expect(cliPhrases.questionGenerateRest)
                         .sendline('yes')
+                        .expect(cliPhrases.questionGenerateMethod)
+                        .sendline('t')
                         .sendEof()
                         .run(function (err, stdout, exitcod) {
                             if (err) { return done(err); }

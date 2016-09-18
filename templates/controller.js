@@ -1,4 +1,4 @@
-var {modelName} = require('../models/{modelName}.js');
+var {modelName} = require({modelPath});
 
 /**
  * {controllerName}.js
