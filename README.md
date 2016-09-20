@@ -14,7 +14,7 @@ Generates a Mongoose model, a REST controller and Express router :
 ```bash
 $ mongoose-gen -m car -f carDoor:number,color -r
         create: ./models/cardModel.js
-        create: ./routes/cards.js
+        create: ./routes/cardRoutes.js
         create: ./controllers/cardController.js
 ```
 
@@ -23,6 +23,7 @@ $ mongoose-gen -m car -f carDoor:number,color -r
   - `-m, --model <modelName>` - the model name.
   - `-f, --fields  <fields>` - the fields (name1:type,name2:type).
   - `-r, --rest` - enable generation REST.
+  - `-t, --tree <tree>`        files tree generation grouped by (t)ype or by (m)odule
 
 ##### Available types
   - string
@@ -74,7 +75,7 @@ module.exports = mongoose.model('car', carSchema);
 ```
 
 ### Router
-routes/cars.js :
+routes/carRoutes.js :
 ```javascript
 var express = require('express');
 var router = express.Router();
@@ -240,8 +241,10 @@ module.exports = {
     }
 };
 ```
-With files tree generation by module
-```Files tree generation grouped by Type or by Module (t/m) ? [t] : m
+
+### With files tree generation by module
+```bash
+Files tree generation grouped by Type or by Module (t/m) ? [t] : m
         create: ./car
         create: ./car/carModel.js
         create: ./car/carController.js
@@ -252,7 +255,7 @@ You then only have to add router in app.js file and MongoDB connection whit Mong
 app.js :
 ```javascript
 var routes = require('./routes/index');
-var cars = require('./routes/cars');
+var cars = require('./routes/carRoutes');
  ...
 
 app.use('/', routes);
