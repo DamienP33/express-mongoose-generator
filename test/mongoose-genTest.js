@@ -8,16 +8,22 @@ var nexpect = require('nexpect');
 var binPath = path.resolve(__dirname, '../bin/mongoose-gen');
 var tempDir = path.resolve(__dirname, '../temp');
 
-var cliPhrases = {
-    availableType: 'Available types : string, number, date, boolean, array, objectId',
-    questionModelName: 'Model Name : ',
-    questionFieldName: 'Field Name (press <return> to stop adding fields) : ',
-    questionFieldType: 'Field Type [string] : ',
-    questionGenerateRest: 'Generate Rest (yes/no) ? [yes] : ',
-    questionGenerateMethod: 'Generate method Type or Feature (t/f) ? [t] : ',
-    errorModelName: 'Argument required : Model name',
-    errorTypeArgument: 'Invalid Argument : Field type is not allowed',
-    errorRestArgument: 'Argument invalid : rest'
+var CLI_PHRASES = {
+    AVAILABLE_TYPE: 'Available types : string, number, date, boolean, array, objectId',
+    QUESTION_MODEL_NAME: 'Model Name : ',
+    QUESTION_FIELD_NAME: 'Field Name (press <return> to stop adding fields) : ',
+    QUESTION_FIELD_TYPE: 'Field Type [string] : ',
+    QUESTION_FIELD_REF: 'Reference (model name referred by the objectId field) : ',
+    QUESTION_GENERATE_REST: 'Generate Rest (yes/no) ? [yes] : ',
+    QUESTION_FILES_TREE: 'Files tree generation grouped by Type or by Module (t/m) ? [t] : ',
+    ERROR_MODEL_NAME: 'Argument required : Model name',
+    ERROR_TYPE_ARGUMENT: 'Invalid Argument : Field type is not allowed',
+    ERROR_REST_ARGUMENT: 'Argument invalid : rest',
+    ERROR_FILES_TREE_ARGUMENT: 'Argument invalid : file tree generation',
+    ERROR_FIELD_REQUIRED: 'Argument required : fields',
+    ERROR_FIELD_NAME_REQUIRED: 'Argument required : Field Name',
+    ERROR_FIELD_TYPE_REQUIRED: 'Argument required : Field type',
+    ERROR_FIELD_TYPE_INVALID: 'Invalid Argument : Field type is not allowed'
 };
 
 describe('mongoose-gen', function () {
@@ -103,7 +109,7 @@ describe('mongoose-gen', function () {
                     done();
                 });
                 it('Should have router file', function (done) {
-                    assert.notEqual(files.indexOf('routes/modelNames.js'), -1);
+                    assert.notEqual(files.indexOf('routes/modelNameRoutes.js'), -1);
                     done();
                 });
             });
@@ -130,22 +136,22 @@ describe('mongoose-gen', function () {
 
                 it('Should print instructions', function (done) {
                     nexpect.spawn(binPath, {cwd: dir})
-                        .expect(cliPhrases.questionModelName)
+                        .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                         .sendline('modelName')
-                        .expect(cliPhrases.availableType)
-                        .expect(cliPhrases.questionFieldName)
+                        .expect(CLI_PHRASES.AVAILABLE_TYPE)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                         .sendline('fieldName1')
-                        .expect(cliPhrases.questionFieldType)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                         .sendline('string')
-                        .expect(cliPhrases.questionFieldName)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                         .sendline('fieldName2')
-                        .expect(cliPhrases.questionFieldType)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                         .sendline('\r')
-                        .expect(cliPhrases.questionFieldName)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                         .sendline('\r')
-                        .expect(cliPhrases.questionGenerateRest)
+                        .expect(CLI_PHRASES.QUESTION_GENERATE_REST)
                         .sendline('no')
-                        .expect(cliPhrases.questionGenerateMethod)
+                        .expect(CLI_PHRASES.QUESTION_FILES_TREE)
                         .sendline('t')
                         .sendEof()
                         .run(function (err, stdout, exitcod) {
@@ -180,22 +186,22 @@ describe('mongoose-gen', function () {
 
                 it('Should print instructions', function (done) {
                     nexpect.spawn(binPath, {cwd: dir})
-                        .expect(cliPhrases.questionModelName)
+                        .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                         .sendline('modelName')
-                        .expect(cliPhrases.availableType)
-                        .expect(cliPhrases.questionFieldName)
+                        .expect(CLI_PHRASES.AVAILABLE_TYPE)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                         .sendline('fieldName1')
-                        .expect(cliPhrases.questionFieldType)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                         .sendline('string')
-                        .expect(cliPhrases.questionFieldName)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                         .sendline('fieldName2')
-                        .expect(cliPhrases.questionFieldType)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                         .sendline('\r')
-                        .expect(cliPhrases.questionFieldName)
+                        .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                         .sendline('\r')
-                        .expect(cliPhrases.questionGenerateRest)
+                        .expect(CLI_PHRASES.QUESTION_GENERATE_REST)
                         .sendline('yes')
-                        .expect(cliPhrases.questionGenerateMethod)
+                        .expect(CLI_PHRASES.QUESTION_FILES_TREE)
                         .sendline('t')
                         .sendEof()
                         .run(function (err, stdout, exitcod) {
@@ -218,7 +224,7 @@ describe('mongoose-gen', function () {
                     done();
                 });
                 it('Should have router file', function (done) {
-                    assert.notEqual(files.indexOf('routes/modelNames.js'), -1);
+                    assert.notEqual(files.indexOf('routes/modelNameRoutes.js'), -1);
                     done();
                 });
             });
@@ -227,13 +233,13 @@ describe('mongoose-gen', function () {
         describe('Error execution', function () {
             it('Require model arg, should print error', function (done) {
                 nexpect.spawn(binPath)
-                    .expect(cliPhrases.questionModelName)
+                    .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                     .sendline('')
-                    .expect(cliPhrases.errorModelName)
-                    .expect(cliPhrases.questionModelName)
+                    .expect(CLI_PHRASES.ERROR_MODEL_NAME)
+                    .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                     .sendline('  ')
-                    .expect(cliPhrases.errorModelName)
-                    .expect(cliPhrases.questionModelName)
+                    .expect(CLI_PHRASES.ERROR_MODEL_NAME)
+                    .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                     .sendline('process.exit()')
                     .sendEof()
                     .run(function (err, stdout, exitcod) {
@@ -244,15 +250,15 @@ describe('mongoose-gen', function () {
             });
             it('Field type is not allowed, should print error', function (done) {
                 nexpect.spawn(binPath)
-                    .expect(cliPhrases.questionModelName)
+                    .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                     .sendline('modelName')
-                    .expect(cliPhrases.availableType)
-                    .expect(cliPhrases.questionFieldName)
+                    .expect(CLI_PHRASES.AVAILABLE_TYPE)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                     .sendline('fieldName1')
-                    .expect(cliPhrases.questionFieldType)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                     .sendline('foo')
-                    .expect(cliPhrases.errorTypeArgument)
-                    .expect(cliPhrases.questionFieldType)
+                    .expect(CLI_PHRASES.ERROR_FIELD_TYPE_INVALID)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                     .sendline('process.exit()')
                     .sendEof()
                     .run(function (err, stdout, exitcod) {
@@ -263,23 +269,23 @@ describe('mongoose-gen', function () {
             });
             it('Rest arg no valid, should print error', function (done) {
                 nexpect.spawn(binPath)
-                    .expect(cliPhrases.questionModelName)
+                    .expect(CLI_PHRASES.QUESTION_MODEL_NAME)
                     .sendline('modelName')
-                    .expect(cliPhrases.availableType)
-                    .expect(cliPhrases.questionFieldName)
+                    .expect(CLI_PHRASES.AVAILABLE_TYPE)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                     .sendline('fieldName1')
-                    .expect(cliPhrases.questionFieldType)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                     .sendline('string')
-                    .expect(cliPhrases.questionFieldName)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                     .sendline('fieldName2')
-                    .expect(cliPhrases.questionFieldType)
+                    .expect(CLI_PHRASES.QUESTION_FIELD_TYPE)
                     .sendline('\r')
-                    .expect('Field Name (press <return> to stop adding fields) : ')
+                    .expect(CLI_PHRASES.QUESTION_FIELD_NAME)
                     .sendline('\r')
-                    .expect(cliPhrases.questionGenerateRest)
+                    .expect(CLI_PHRASES.QUESTION_GENERATE_REST)
                     .sendline('foo')
-                    .expect(cliPhrases.errorRestArgument)
-                    .expect(cliPhrases.questionGenerateRest)
+                    .expect(CLI_PHRASES.ERROR_REST_ARGUMENT)
+                    .expect(CLI_PHRASES.QUESTION_GENERATE_REST)
                     .sendline('process.exit()')
                     .sendEof()
                     .run(function (err, stdout, exitcod) {
@@ -300,6 +306,7 @@ describe('mongoose-gen', function () {
             assert.ok(/-m, --model <modelName>  model name/.test(stdout));
             assert.ok(/-f, --fields <fields>    model fields/.test(stdout));
             assert.ok(/-r, --rest               enable generation REST/.test(stdout));
+            assert.ok(/-t, --tree <tree>        files tree generation grouped by <t>ype or by <m>odule/.test(stdout));
             done();
         });
     });

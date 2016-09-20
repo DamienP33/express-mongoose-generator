@@ -48,8 +48,9 @@ Field Type [string] : objectId
 Reference (model name referred by the objectId field) : User
 Field Name (press <return> to stop adding fields) : 
 Generate Rest (yes/no) ? [yes] : 
+Files tree generation grouped by Type or by Module (t/m) ? [t] : 
         create: ./models/carModel.js
-        create: ./routes/cars.js
+        create: ./routes/carsRoutes.js
         create: ./controllers/carController.js
 ```
 
@@ -238,6 +239,13 @@ module.exports = {
         });
     }
 };
+```
+With files tree generation by module
+```Files tree generation grouped by Type or by Module (t/m) ? [t] : m
+        create: ./car
+        create: ./car/carModel.js
+        create: ./car/carController.js
+        create: ./car/carRoutes.js
 ```
 
 You then only have to add router in app.js file and MongoDB connection whit Mongoose.
