@@ -84,39 +84,30 @@ var carController = require('../controllers/carController.js');
 /*
  * GET
  */
-router.get('/', function(req, res) {
-    carController.list(req, res);
-});
+router.get('/', carController.list);
 
 /*
  * GET
  */
-router.get('/:id', function(req, res) {
-    carController.show(req, res);
-});
+router.get('/:id', carController.show);
 
 /*
  * POST
  */
-router.post('/', function(req, res) {
-    carController.create(req, res);
-});
+router.post('/', carController.create);
 
 /*
  * PUT
  */
-router.put('/:id', function(req, res) {
-    carController.update(req, res);
-});
+router.put('/:id', carController.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', function(req, res) {
-    carController.remove(req, res);
-});
+router.delete('/:id', carController.remove);
 
 module.exports = router;
+
 ```
 
 ### Controller

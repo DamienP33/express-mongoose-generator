@@ -5,36 +5,26 @@ var {controllerName} = require({controllerPath});
 /*
  * GET
  */
-router.get('/', function (req, res) {
-    {controllerName}.list(req, res);
-});
+router.get('/', {controllerName}.list);
 
 /*
  * GET
  */
-router.get('/:id', function (req, res) {
-    {controllerName}.show(req, res);
-});
+router.get('/:id', {controllerName}.show);
 
 /*
  * POST
  */
-router.post('/', function (req, res) {
-    {controllerName}.create(req, res);
-});
+router.post('/', {controllerName}.create);
 
 /*
  * PUT
  */
-router.put('/:id', function (req, res) {
-    {controllerName}.update(req, res);
-});
+router.put('/:id', {controllerName}.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', function (req, res) {
-    {controllerName}.remove(req, res);
-});
+router.delete('/:id', {controllerName}.remove);
 
 module.exports = router;
