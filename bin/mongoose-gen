@@ -100,7 +100,7 @@ function runInteractiveMode (path) {
                                 },
                                 reference: function (cb) {
                                     if (currentField.type === 'objectId') {
-                                        askQuestion(QUESTION_FIELD_REF, null, function (referenceName) {
+                                        askQuestion(CLI_PHRASES.QUESTION_FIELD_REF, null, function (referenceName) {
                                             referenceName = (referenceName.trim().length === 0) ?
                                                 'INSERT_YOUR_REFERENCE_NAME_HERE'
                                                 : referenceName;
