@@ -17,7 +17,7 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
-var ALLOWER_FIELDS_TYPES = ['string', 'number', 'date', 'boolean', 'array', 'objectId'];
+var ALLOWED_FIELDS_TYPES = ['string', 'number', 'date', 'boolean', 'array', 'objectId'];
 var ALLOWED_REST_ARGUMENT = {'YES': 'yes', 'NO': 'no'};
 var ALLOWED_FILE_TREE_ARGUMENT = {'TYPE': 't', 'MODULE': 'm'};
 var CLI_PHRASES = {
@@ -245,8 +245,8 @@ function isModelNameParamValid(name) {
  * @returns {boolean} is validated
  */
 function isFieldTypeParamValid(fieldType) {
-    if (!fieldType || fieldType.trim().length === 0) { fieldType = ALLOWER_FIELDS_TYPES[0]; } // default value
-    if (ALLOWER_FIELDS_TYPES.indexOf(fieldType) === -1) {
+    if (!fieldType || fieldType.trim().length === 0) { fieldType = ALLOWED_FIELDS_TYPES[0]; } // default value
+    if (ALLOWED_FIELDS_TYPES.indexOf(fieldType) === -1) {
         consoleError(CLI_PHRASES.ERROR_TYPE_ARGUMENT);
         return false;
     }
@@ -309,7 +309,7 @@ function isFieldValid(fieldName, fieldType) {
         consoleError(CLI_PHRASES.ERROR_FIELD_TYPE_REQUIRED);
         return false;
     }
-    if (ALLOWER_FIELDS_TYPES.indexOf(fieldType) === -1) {
+    if (ALLOWED_FIELDS_TYPES.indexOf(fieldType) === -1) {
         consoleError(CLI_PHRASES.ERROR_FIELD_TYPE_INVALID);
         return false;
     }
@@ -328,7 +328,7 @@ function formatFieldsParamInArray(fields) {
     var err = arrayFields.every(function (field) {
         var f = field.split(':');
         var fieldName = f[0];
-        var fieldType = (f[1] || ALLOWER_FIELDS_TYPES[0]);
+        var fieldType = (f[1] || ALLOWED_FIELDS_TYPES[0]);
 
         if (!isFieldValid(fieldName, fieldType)) { return false; }
 
