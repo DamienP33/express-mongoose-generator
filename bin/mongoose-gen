@@ -329,12 +329,14 @@ function formatFieldsParamInArray(fields) {
         var f = field.split(':');
         var fieldName = f[0];
         var fieldType = (f[1] || ALLOWED_FIELDS_TYPES[0]);
+        var isArray = f[2] === 'a';
 
         if (!isFieldValid(fieldName, fieldType)) { return false; }
 
         result.push({
             name: fieldName,
-            type: fieldType
+            type: fieldType,
+            array: isArray
         });
 
         return true;
