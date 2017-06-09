@@ -327,16 +327,26 @@ function formatFieldsParamInArray(fields) {
 
     var err = arrayFields.every(function (field) {
         var f = field.split(':');
+
         var fieldName = f[0];
         var fieldType = (f[1] || ALLOWED_FIELDS_TYPES[0]);
-        var isArray = f[2] === 'a';
+        var fieldRef = '';
+        var isArray = false;
+
+        if (fieldType === ALLOWED_FIELDS_TYPES[5]) {
+            fieldRef = f[2];
+            isArray = f[3] === ALLOWED_FIELDS_TYPES[4];
+        } else {
+            isArray = f[2] === ALLOWED_FIELDS_TYPES[4];
+        }
 
         if (!isFieldValid(fieldName, fieldType)) { return false; }
 
         result.push({
             name: fieldName,
             type: fieldType,
-            array: isArray
+            isArray: isArray,
+            reference: fieldRef
         });
 
         return true;
