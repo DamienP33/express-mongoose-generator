@@ -46,23 +46,27 @@ program
     .option('-f, --fields <fields>', 'model fields (name1:type1,name2:type2)')
     .option('-r, --rest', 'enable generation REST')
     .option('-t, --tree <tree>', 'files tree generation grouped by <t>ype or by <m>odule')
+    .option('--ts', 'Generating code in TS')
     .parse(process.argv)
 ;
 
 // Main program
 (function (path) {
+    var ts = !!(program.ts);
+
     if (program.model || program.fields) {
-        runNonInteractiveMode(path);
+        runNonInteractiveMode(path, ts);
     } else {
-        runInteractiveMode(path);
+        runInteractiveMode(path, ts);
     }
 })('.');
 
 /**
  * Get parameters in interactive mode
  * @param {string} path destination path
+ * @param {boolean} ts generating code in TS
  */
-function runInteractiveMode (path) {
+function runInteractiveMode (path, ts) {
     async.series({
             name: function (cb) {
                 askQuestion(CLI_PHRASES.QUESTION_MODEL_NAME, isModelNameParamValid, function (name) {
@@ -142,15 +146,15 @@ function runInteractiveMode (path) {
 
             async.parallel([
                     function (cb) {
-                        generators.generateModel(path, results.name, results.fields, results.generateMethod, cb);
+                        generators.generateModel(path, results.name, results.fields, results.generateMethod, ts, cb);
                     },
                     function (cb) {
                         if (results.rest !== 'yes') { return cb(); }
-                        generators.generateRouter(path, results.name, results.generateMethod, cb);
+                        generators.generateRouter(path, results.name, results.generateMethod, ts,  cb);
                     }            ,
                     function (cb) {
                         if (results.rest !== 'yes') { return cb(); }
-                        generators.generateController(path, results.name, results.fields, results.generateMethod, cb);
+                        generators.generateController(path, results.name, results.fields, results.generateMethod, ts, cb);
                     }
                 ],
                 function (err, results) {
@@ -164,8 +168,9 @@ function runInteractiveMode (path) {
 /**
  * Get parameters in non-interactive mode
  * @param {string} path destination path
+ * @param {boolean} ts generating code in TS
  */
-function runNonInteractiveMode(path) {
+function runNonInteractiveMode(path, ts) {
     if (!isModelNameParamValid(program.model) || !isFieldsParamValid(program.fields)) {
         return closeProgram();
     }
@@ -182,15 +187,15 @@ function runNonInteractiveMode(path) {
 
     async.parallel([
             function (cb) {
-                generators.generateModel(path, modelName, modelFields, fileTree, cb);
+                generators.generateModel(path, modelName, modelFields, fileTree, ts, cb);
             },
             function (cb) {
                 if (!program.rest) { return cb(); }
-                generators.generateRouter(path, modelName, fileTree, cb);
+                generators.generateRouter(path, modelName, fileTree, ts, cb);
             },
             function (cb) {
                 if (!program.rest) { return cb(); }
-                generators.generateController(path, modelName, modelFields, fileTree, cb);
+                generators.generateController(path, modelName, modelFields, fileTree, ts, cb);
             }
         ],
         function (err, results) {
