@@ -27,7 +27,7 @@ var CLI_PHRASES = {
     QUESTION_FIELD_TYPE: 'Field Type [string] : ',
     QUESTION_FIELD_REF: 'Reference (model name referred by the objectId field) : ',
     QUESTION_GENERATE_REST: 'Generate Rest (yes/no) ? [yes] : ',
-    QUESTION_FILES_TREE: 'Files tree generation grouped by Type or by Module (t/m) ? [t] : ',
+    QUESTION_FILES_TREE: 'Files tree generation grouped by Type or by Model (t/m) ? [t] : ',
     ERROR_MODEL_NAME: 'Argument required : Model name',
     ERROR_TYPE_ARGUMENT: 'Invalid Argument : Field type is not allowed',
     ERROR_REST_ARGUMENT: 'Argument invalid : rest',
@@ -45,7 +45,7 @@ program
     .option('-m, --model <modelName>', 'model name')
     .option('-f, --fields <fields>', 'model fields (name1:type1,name2:type2)')
     .option('-r, --rest', 'enable generation REST')
-    .option('-t, --tree <tree>', 'files tree generation grouped by <t>ype or by <m>odule')
+    .option('-t, --tree <tree>', 'files tree generation grouped by <t>ype or by <m>odel')
     .option('--ts', 'Generating code in TS')
     .parse(process.argv)
 ;
