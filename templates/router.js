@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var {controllerName} = require({controllerPath});
+let express = require('express');
+let router = express.Router();
+let {controllerName} = require({controllerPath});
 
 /*
  * GET
