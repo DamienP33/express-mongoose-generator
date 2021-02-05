@@ -4,7 +4,8 @@
     "description": "It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application",
     "author": "Damien Perrier <damienperrier33@gmail.com>",
     "contributors": [
-        "romuloctba"
+        "romuloctba",
+        "abks90"
     ],
     "keywords": [
         "mongodb",
@@ -40,10 +41,10 @@
         "commander": "^2.5.0"
     },
     "devDependencies": {
-        "jscs": "^2.5.1",
+        "jscs": "^3.0.7",
         "jshint": "^2.8.0",
         "mkdirp": "^0.5.0",
-        "mocha": "^2.0.1",
+        "mocha": "^8.2.1",
         "nexpect": "^0.4.2",
         "rimraf": "^2.2.8"
     },

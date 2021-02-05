@@ -18,6 +18,7 @@ module.exports = {
                     error: err
                 });
             }
+
             return res.json({pluralName});
         });
     },
@@ -27,6 +28,7 @@ module.exports = {
      */
     show: function (req, res) {
         var id = req.params.id;
+
         {modelName}.findOne({_id: id}, function (err, {name}) {
             if (err) {
                 return res.status(500).json({
@@ -34,11 +36,13 @@ module.exports = {
                     error: err
                 });
             }
+
             if (!{name}) {
                 return res.status(404).json({
                     message: 'No such {name}'
                 });
             }
+
             return res.json({name});
         });
     },
@@ -57,6 +61,7 @@ module.exports = {
                     error: err
                 });
             }
+
             return res.status(201).json({name});
         });
     },
@@ -66,6 +71,7 @@ module.exports = {
      */
     update: function (req, res) {
         var id = req.params.id;
+
         {modelName}.findOne({_id: id}, function (err, {name}) {
             if (err) {
                 return res.status(500).json({
@@ -73,6 +79,7 @@ module.exports = {
                     error: err
                 });
             }
+
             if (!{name}) {
                 return res.status(404).json({
                     message: 'No such {name}'
@@ -98,6 +105,7 @@ module.exports = {
      */
     remove: function (req, res) {
         var id = req.params.id;
+
         {modelName}.findByIdAndRemove(id, function (err, {name}) {
             if (err) {
                 return res.status(500).json({
@@ -105,6 +113,7 @@ module.exports = {
                     error: err
                 });
             }
+
             return res.status(204).json();
         });
     }

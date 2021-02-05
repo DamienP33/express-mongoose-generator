@@ -24,6 +24,7 @@ $ mongoose-gen -m car -f carDoor:number,color -r
   - `-f, --fields  <fields>` - the fields (name1:type,name2:type).
   - `-r, --rest` - enable generation REST.
   - `-t, --tree <tree>`        files tree generation grouped by (t)ype or by (m)odule
+  - `--ts` generate TypeScrypt files
 
 ##### Available types
   - string
