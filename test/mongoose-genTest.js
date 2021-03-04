@@ -1,14 +1,14 @@
-var assert = require('assert');
-var spawn  = require('child_process').spawn;
-var path   = require('path');
-var mkdirp = require('mkdirp');
-var rimraf = require('rimraf');
-var nexpect = require('nexpect');
+const assert = require('assert');
+const spawn  = require('child_process').spawn;
+const path   = require('path');
+const mkdirp = require('mkdirp');
+const rimraf = require('rimraf');
+const nexpect = require('nexpect');
 
-var binPath = path.resolve(__dirname, '../bin/mongoose-gen');
-var tempDir = path.resolve(__dirname, '../temp');
+const binPath = path.resolve(__dirname, '../bin/mongoose-gen');
+const tempDir = path.resolve(__dirname, '../temp');
 
-var CLI_PHRASES = {
+const CLI_PHRASES = {
     AVAILABLE_TYPE: 'Available types : string, number, date, boolean, array, objectId',
     QUESTION_MODEL_NAME: 'Model Name : ',
     QUESTION_FIELD_NAME: 'Field Name (press <return> to stop adding fields) : ',
@@ -51,7 +51,7 @@ describe('mongoose-gen', function () {
 
         describe('Normal execution', function () {
             describe('Basic usage', function () {
-                var dir;
+                let dir;
 
                 before(function (done) {
                     createEnvironment(function (err, newDir) {
@@ -68,7 +68,7 @@ describe('mongoose-gen', function () {
                 it('Should have mongoose model file', function (done) {
                     run(dir, ['-m', 'modelName', '-f', 'fieldName:number'], function (err, stdout) {
                         if (err) { return done(err); }
-                        var files = parseCreatedFiles(stdout, dir);
+                        const files = parseCreatedFiles(stdout, dir);
                         assert.equal(files.length, 2);
                         assert.notEqual(files.indexOf('models/modelNameModel.js'), -1);
                         done();
@@ -77,8 +77,8 @@ describe('mongoose-gen', function () {
             });
 
             describe('-r', function () {
-                var files;
-                var dir;
+                let files;
+                let dir;
 
                 before(function (done) {
                     createEnvironment(function (err, newDir) {
@@ -119,8 +119,8 @@ describe('mongoose-gen', function () {
     describe('Interactive mode', function () {
         describe('Normal execution', function () {
             describe('Basic usage', function () {
-                var dir;
-                var files;
+                let dir;
+                let files;
 
                 before(function (done) {
                     createEnvironment(function (err, newDir) {
@@ -169,8 +169,8 @@ describe('mongoose-gen', function () {
             });
 
             describe('Rest', function () {
-                var dir;
-                var files;
+                let dir;
+                let files;
 
                 before(function (done) {
                     createEnvironment(function (err, newDir) {
@@ -329,8 +329,8 @@ function cleanup(dir, callback) {
 }
 
 function createEnvironment(callback) {
-    var num = process.pid + Math.random();
-    var dir = path.join(tempDir, ('app-' + num));
+    const num = process.pid + Math.random();
+    const dir = path.join(tempDir, ('app-' + num));
 
     mkdirp(dir, function ondir(err) {
         if (err) { return callback(err); }
@@ -339,16 +339,16 @@ function createEnvironment(callback) {
 }
 
 function parseCreatedFiles(output, dir) {
-    var files = [];
-    var lines = output;
+    const files = [];
+    let lines = output;
     if (typeof output === 'string') {
         lines = output.split(/[\r\n]+/);
     }
-    var match;
+    const match;
 
-    for (var i = 0; i < lines.length; i++) {
+    for (const i = 0; i < lines.length; i++) {
         if ((match = /create.*?: (.*)$/.exec(lines[i]))) {
-            var file = match[1];
+            let file = match[1];
 
             if (dir) {
                 file = path.resolve(dir, file);
@@ -364,13 +364,13 @@ function parseCreatedFiles(output, dir) {
 }
 
 function run(dir, args, callback) {
-    var argv = [binPath].concat(args);
-    var exec = process.argv[0];
+    const argv = [binPath].concat(args);
+    const exec = process.argv[0];
 
-    var stdout = '';
-    var stderr = '';
+    const stdout = '';
+    const stderr = '';
 
-    var child = spawn(exec, argv, {
+    const child = spawn(exec, argv, {
         cwd: dir
     });
 
@@ -387,7 +387,7 @@ function run(dir, args, callback) {
     child.on('error', callback);
 
     child.on('close', function onclose(code) {
-        var err = null;
+        let err = null;
 
         try {
             assert.equal(stderr, '');

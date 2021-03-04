@@ -60,10 +60,10 @@ Files tree generation grouped by Type or by Module (t/m) ? [t] :
 ### Model
 models/carModel.js :
 ```javascript
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var carSchema = new Schema({
+const carSchema = new Schema({
 	"color" : String,
 	"door" : Number,
     "owner" : {
@@ -78,9 +78,9 @@ module.exports = mongoose.model('car', carSchema);
 ### Router
 routes/carRoutes.js :
 ```javascript
-var express = require('express');
-var router = express.Router();
-var carController = require('../controllers/carController.js');
+const express = require('express');
+const router = express.Router();
+const carController = require('../controllers/carController.js');
 
 /*
  * GET
@@ -114,7 +114,7 @@ module.exports = router;
 ### Controller
 controllers/carController.js :
 ```javascript
-var carModel = require('../models/carModel.js');
+const carModel = require('../models/carModel.js');
 
 /**
  * carController.js
@@ -141,7 +141,7 @@ module.exports = {
      * carController.show()
      */
     show: function(req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
         carModel.findOne({_id: id}, function(err, car){
             if(err) {
                 return res.status(500).json({
@@ -161,7 +161,7 @@ module.exports = {
      * carController.create()
      */
     create: function(req, res) {
-        var car = new carModel({
+        const car = new carModel({
 			color : req.body.color,
 			door : req.body.door
         });
@@ -184,7 +184,7 @@ module.exports = {
      * carController.update()
      */
     update: function(req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
         carModel.findOne({_id: id}, function(err, car){
             if(err) {
                 return res.status(500).json({
@@ -221,7 +221,7 @@ module.exports = {
      * carController.remove()
      */
     remove: function(req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
         carModel.findByIdAndRemove(id, function(err, car){
             if(err) {
                 return res.status(500).json({
@@ -246,8 +246,8 @@ Files tree generation grouped by Type or by Module (t/m) ? [t] : m
 You then only have to add router in app.js file and MongoDB connection whit Mongoose.
 app.js :
 ```javascript
-var routes = require('./routes/index');
-var cars = require('./routes/carRoutes');
+const routes = require('./routes/index');
+const cars = require('./routes/carRoutes');
  ...
 
 app.use('/', routes);

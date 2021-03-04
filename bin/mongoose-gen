@@ -3,24 +3,24 @@
 /**
  * Module dependencies
  */
-var program  = require('commander');
-var readline = require('readline');
-var async    = require('async');
-var generators = require('../lib/generators');
-var cliStyles = require('../lib/cliStyles');
+const program  = require('commander');
+const readline = require('readline');
+const async    = require('async');
+const generators = require('../lib/generators');
+const cliStyles = require('../lib/cliStyles');
 
-var pkg = require('../package.json');
-var version = pkg.version;
+const pkg = require('../package.json');
+const version = pkg.version;
 
-var rl = readline.createInterface({
+const rl = readline.createInterface({
     input : process.stdin,
     output: process.stdout
 });
 
-var ALLOWED_FIELDS_TYPES = ['string', 'number', 'date', 'boolean', 'array', 'objectId'];
-var ALLOWED_REST_ARGUMENT = {'YES': 'yes', 'NO': 'no'};
-var ALLOWED_FILE_TREE_ARGUMENT = {'TYPE': 't', 'MODULE': 'm'};
-var CLI_PHRASES = {
+const ALLOWED_FIELDS_TYPES = ['string', 'number', 'date', 'boolean', 'array', 'objectId'];
+const ALLOWED_REST_ARGUMENT = {'YES': 'yes', 'NO': 'no'};
+const ALLOWED_FILE_TREE_ARGUMENT = {'TYPE': 't', 'MODULE': 'm'};
+const CLI_PHRASES = {
     AVAILABLE_TYPE: 'Available types : string, number, date, boolean, array, objectId',
     QUESTION_MODEL_NAME: 'Model Name : ',
     QUESTION_FIELD_NAME: 'Field Name (press <return> to stop adding fields) : ',
@@ -52,7 +52,7 @@ program
 
 // Main program
 (function (path) {
-    var ts = !!(program.ts);
+    const ts = !!(program.ts);
 
     if (program.model || program.fields) {
         runNonInteractiveMode(path, ts);
@@ -75,9 +75,9 @@ function runInteractiveMode (path, ts) {
                 });
             },
             fields: function (cb) {
-                var exit   = false;
-                var fields = [];
-                var currentField = {};
+                let exit   = false;
+                const fields = [];
+                const currentField = {};
 
                 async.whilst(
                     function () { return !exit; },
@@ -175,9 +175,9 @@ function runNonInteractiveMode(path, ts) {
         return closeProgram();
     }
 
-    var modelName = program.model;
-    var modelFields = formatFieldsParamInArray(program.fields);
-    var fileTree = program.tree || ALLOWED_FILE_TREE_ARGUMENT.TYPE;
+    const modelName = program.model;
+    const modelFields = formatFieldsParamInArray(program.fields);
+    const fileTree = program.tree || ALLOWED_FILE_TREE_ARGUMENT.TYPE;
 
     if (!isFileTreeParamValid(fileTree)) {
         return closeProgram();
@@ -327,16 +327,16 @@ function isFieldValid(fieldName, fieldType) {
  * @returns {Array} fields formatted
  */
 function formatFieldsParamInArray(fields) {
-    var arrayFields = fields.split(',');
-    var result = [];
+    const arrayFields = fields.split(',');
+    const result = [];
 
-    var err = arrayFields.every(function (field) {
-        var f = field.split(':');
+    const err = arrayFields.every(function (field) {
+        const f = field.split(':');
 
-        var fieldName = f[0];
-        var fieldType = (f[1] || ALLOWED_FIELDS_TYPES[0]);
-        var fieldRef = '';
-        var isArray = false;
+        const fieldName = f[0];
+        const fieldType = (f[1] || ALLOWED_FIELDS_TYPES[0]);
+        let fieldRef = '';
+        let isArray = false;
 
         if (fieldType === ALLOWED_FIELDS_TYPES[5]) {
             fieldRef = f[2];

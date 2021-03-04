@@ -1,4 +1,4 @@
-var {modelName} = require({modelPath});
+const {modelName} = require({modelPath});
 
 /**
  * {controllerName}.js
@@ -27,7 +27,7 @@ module.exports = {
      * {controllerName}.show()
      */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         {modelName}.findOne({_id: id}, function (err, {name}) {
             if (err) {
@@ -51,7 +51,7 @@ module.exports = {
      * {controllerName}.create()
      */
     create: function (req, res) {
-        var {name} = new {modelName}({{createFields}
+        const {name} = new {modelName}({{createFields}
         });
 
         {name}.save(function (err, {name}) {
@@ -70,7 +70,7 @@ module.exports = {
      * {controllerName}.update()
      */
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         {modelName}.findOne({_id: id}, function (err, {name}) {
             if (err) {
@@ -104,7 +104,7 @@ module.exports = {
      * {controllerName}.remove()
      */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         {modelName}.findByIdAndRemove(id, function (err, {name}) {
             if (err) {
