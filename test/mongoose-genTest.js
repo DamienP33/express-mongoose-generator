@@ -367,8 +367,8 @@ function run(dir, args, callback) {
     const argv = [binPath].concat(args);
     const exec = process.argv[0];
 
-    const stdout = '';
-    const stderr = '';
+    let stdout = '';
+    let stderr = '';
 
     const child = spawn(exec, argv, {
         cwd: dir
