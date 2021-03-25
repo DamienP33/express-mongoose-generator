@@ -60,10 +60,10 @@ Files tree generation grouped by Type or by Module (t/m) ? [t] :
 ### Model
 models/carModel.js :
 ```javascript
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var carSchema = new Schema({
+const carSchema = new Schema({
 	"color" : String,
 	"door" : Number,
     "owner" : {
@@ -78,9 +78,9 @@ module.exports = mongoose.model('car', carSchema);
 ### Router
 routes/carRoutes.js :
 ```javascript
-var express = require('express');
-var router = express.Router();
-var carController = require('../controllers/carController.js');
+const express = require('express');
+const router = express.Router();
+const carController = require('./carController.js');
 
 /*
  * GET
@@ -91,6 +91,11 @@ router.get('/', carController.list);
  * GET
  */
 router.get('/:id', carController.show);
+
+/*
+ * GET
+ */
+router.get('/paginate', carController.paginate);
 
 /*
  * POST
@@ -114,7 +119,7 @@ module.exports = router;
 ### Controller
 controllers/carController.js :
 ```javascript
-const CarModel = require('../models/carModel.js');
+const CarModel = require('./carModel.js');
 
 /**
  * carController.js
@@ -244,14 +249,39 @@ const remove = async (req, res) => {
         });
     }
 
-}
+};
+
+const paginate = async (req, res) => {
+    // destructure page and limit and set default values
+    const { page = 1, limit = 10 } = req.query;
+  
+    try {
+      // execute query with page and limit values
+      const car = await CarModel.find()
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+  
+      // return response with car and current page
+      res.json({
+        car,
+        currentPage: page
+      });
+    } catch (err) {
+        return res.status(500).json({
+            message: 'Error while paginating car.',
+            error: err
+        });
+    }
+  });
 
 module.exports = {
     list,
     show,
     create,
     update,
-    remove,  
+    remove,
+    paginate,
 };
 ```
 
