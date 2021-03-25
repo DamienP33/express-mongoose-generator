@@ -4,8 +4,14 @@
 It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application.
 
 ## Installation
+Use this to install a version `express-mongoose-generator` by me, has `async-await`, `pagination` and `use of let and const` in it ( in short use this for new features).
 ```bash
-$ npm install -g express-mongoose-generator
+$ npm install -g https://github.com/KetanIP/express-mongoose-generator
+```
+
+Use this to install `express-mongoose-generator`.
+```bash
+$ npm install -g express-mongoose-generator 
 ```
 
 ## Usage
@@ -60,10 +66,10 @@ Files tree generation grouped by Type or by Module (t/m) ? [t] :
 ### Model
 models/carModel.js :
 ```javascript
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var carSchema = new Schema({
+const carSchema = new Schema({
 	"color" : String,
 	"door" : Number,
     "owner" : {
@@ -78,9 +84,9 @@ module.exports = mongoose.model('car', carSchema);
 ### Router
 routes/carRoutes.js :
 ```javascript
-var express = require('express');
-var router = express.Router();
-var carController = require('../controllers/carController.js');
+const express = require('express');
+const router = express.Router();
+const carController = require('./carController.js');
 
 /*
  * GET
@@ -91,6 +97,11 @@ router.get('/', carController.list);
  * GET
  */
 router.get('/:id', carController.show);
+
+/*
+ * GET
+ */
+router.get('/p/paginate', carController.paginate);
 
 /*
  * POST
@@ -114,123 +125,169 @@ module.exports = router;
 ### Controller
 controllers/carController.js :
 ```javascript
-var carModel = require('../models/carModel.js');
+const CarModel = require('./carModel.js');
 
 /**
  * carController.js
  *
  * @description :: Server-side logic for managing cars.
  */
-module.exports = {
 
-    /**
-     * carController.list()
-     */
-    list: function(req, res) {
-        carModel.find(function(err, cars){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error getting car.'
-                });
-            }
-            return res.json(cars);
+
+/**
+ * carController.list()
+ */
+const list = async (req, res) => {
+        
+    try {
+        let cars = await CarModel.find({});
+        return res.json(cars);
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 'Error when getting car.',
+            error: err
         });
-    },
+    };
+};
 
-    /**
-     * carController.show()
-     */
-    show: function(req, res) {
-        var id = req.params.id;
-        carModel.findOne({_id: id}, function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error getting car.'
-                });
-            }
-            if(!car) {
-                return res.status(404).json({
-                    message: 'No such car'
-                });
-            }
-            return res.json(car);
-        });
-    },
+/**
+ * carController.show()
+ */
+const show = async (req, res) => {
 
-    /**
-     * carController.create()
-     */
-    create: function(req, res) {
-        var car = new carModel({
-			color : req.body.color,
-			door : req.body.door
-        });
+    let id = req.params.id;
 
-        car.save(function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error saving car',
-                    error: err
-                });
-            }
-            return res.json({
-                message: 'saved',
-                _id: car._id
+    try {
+        let car = await CarModel.findOne({_id: id});
+
+        if (!car) {
+            return res.status(404).json({
+                message: 'No such car'
             });
-        });
-    },
+        }
 
-    /**
-     * carController.update()
-     */
-    update: function(req, res) {
-        var id = req.params.id;
-        carModel.findOne({_id: id}, function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error saving car',
-                    error: err
-                });
-            }
-            if(!car) {
-                return res.status(404).json({
-                    message: 'No such car'
-                });
-            }
-
-            car.color =  req.body.color ? req.body.color : car.color;
-			car.door =  req.body.door ? req.body.door : car.door;
-			
-            car.save(function(err, car){
-                if(err) {
-                    return res.status(500).json({
-                        message: 'Error getting car.'
-                    });
-                }
-                if(!car) {
-                    return res.status(404).json({
-                        message: 'No such car'
-                    });
-                }
-                return res.json(car);
-            });
-        });
-    },
-
-    /**
-     * carController.remove()
-     */
-    remove: function(req, res) {
-        var id = req.params.id;
-        carModel.findByIdAndRemove(id, function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error getting car.'
-                });
-            }
-            return res.json(car);
+        return res.json(car);
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 'Error when getting car.',
+            error: err
         });
     }
+
+};
+
+/**
+ * carController.create()
+ */
+const create = async (req, res) => {
+
+    let car = new CarModel({
+			door : req.body.door,
+			color : req.body.color,
+			owner : req.body.owner});
+    
+    try {
+        let car = await car.save();
+        return res.status(201).json(car);
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 'Error when creating car.',
+            error: err
+        });
+    }
+}
+
+/**
+* carController.update()
+*/
+
+const update = async (req, res) => {
+    let id = req.params.id;
+    let car;
+
+    try {
+        car = await CarModel.findOne({_id: id});
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 'Error when getting car',
+            error: err
+        });
+    }
+
+
+    car.door = req.body.door ? req.body.door : car.door;
+			car.color = req.body.color ? req.body.color : car.color;
+			car.owner = req.body.owner ? req.body.owner : car.owner;
+			
+
+    try {
+        car = await car.save();
+        return res.json(car);
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 'Error when updating car.',
+            error: err
+        });
+    }
+
+};
+
+
+/**
+ * carController.remove()
+ */
+const remove = async (req, res) => {
+    let id = req.params.id;
+
+    try {
+        let car = CarModel.findByIdAndRemove(id);
+        return res.status(204).json();
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 'Error when deleting the car.',
+            error: err
+        });
+    }
+
+};
+
+const paginate = async (req, res) => {
+    // destructure page and limit and set default values
+    const { page = 1, limit = 10 } = req.query;
+  
+    try {
+      // execute query with page and limit values
+      const car = await CarModel.find()
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+  
+      // return response with car and current page
+      res.json({
+        car,
+        currentPage: page
+      });
+    } catch (err) {
+        return res.status(500).json({
+            message: 'Error while paginating car.',
+            error: err
+        });
+    }
+  });
+
+module.exports = {
+    list,
+    show,
+    create,
+    update,
+    remove,
+    paginate,
 };
 ```
 
@@ -258,5 +315,5 @@ app.use('/cars', cars);
 
 ## Licence
 
-Copyright (c) 2017 Damien Perrier
+Copyright (c) 2021 Damien Perrier.
 Licensed under the [MIT license](LICENSE).

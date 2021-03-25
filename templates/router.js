@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var {controllerName} = require({controllerPath});
+const express = require('express');
+const router = express.Router();
+const {controllerName} = require({controllerPath});
 
 /*
  * GET
@@ -11,6 +11,11 @@ router.get('/', {controllerName}.list);
  * GET
  */
 router.get('/:id', {controllerName}.show);
+
+/*
+ * GET
+ */
+router.get('/p/paginate', {controllerName}.paginate);
 
 /*
  * POST
