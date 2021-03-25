@@ -1,5 +1,5 @@
 {
-    "name": "express-mongoose-generator",
+    "name": "express-mongoose-innator",
     "version": "3.1.0",
     "description": "It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application",
     "author": "Damien Perrier <damienperrier33@gmail.com>",
