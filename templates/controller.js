@@ -122,12 +122,37 @@ const remove = async (req, res) => {
         });
     }
 
-}
+};
+
+const paginate = async (req, res) => {
+    // destructure page and limit and set default values
+    const { page = 1, limit = 10 } = req.query;
+  
+    try {
+      // execute query with page and limit values
+      const {name} = await {modelName}.find()
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+  
+      // return response with {name} and current page
+      res.json({
+        {name},
+        currentPage: page
+      });
+    } catch (err) {
+        return res.status(500).json({
+            message: 'Error while paginating {name}.',
+            error: err
+        });
+    }
+  });
 
 module.exports = {
     list,
     show,
     create,
     update,
-    remove,  
+    remove,
+    paginate,
 };
