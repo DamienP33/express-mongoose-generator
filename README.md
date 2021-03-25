@@ -4,7 +4,7 @@
 It’s a mongoose model, REST controller and Express router code generator for Express.js 4 application.
 
 ## Installation
-Use this to install `express-mongoose-inator` it has `async-await`, `pagination` and `use of let and const` in it ( in short use this for new features).
+Use this to install a version `express-mongoose-generator` by me, has `async-await`, `pagination` and `use of let and const` in it ( in short use this for new features).
 ```bash
 $ npm install -g https://github.com/KetanIP/express-mongoose-generator
 ```
