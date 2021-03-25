@@ -13,7 +13,7 @@ const {modelName} = require({modelPath});
 const list = async (req, res) => {
         
     try {
-        let {pluralName} = await {modelName}.find({});
+        let {pluralName} = await {modelName}.find({}).exec();
         return res.json({pluralName});
     }
     catch (err) {
@@ -32,7 +32,7 @@ const show = async (req, res) => {
     let id = req.params.id;
 
     try {
-        let {name} = await {modelName}.findOne({_id: id});
+        let {name} = await {modelName}.findOne({_id: id}).exec();
 
         if (!{name}) {
             return res.status(404).json({
@@ -59,7 +59,7 @@ const create = async (req, res) => {
     let {name} = new {modelName}({{createFields}});
     
     try {
-        let {name} = await {name}.save();
+        {name} = await {name}.save();
         return res.status(201).json({name});
     }
     catch (err) {
@@ -79,7 +79,7 @@ const update = async (req, res) => {
     let {name};
 
     try {
-        {name} = await {modelName}.findOne({_id: id});
+        {name} = await {modelName}.findOne({_id: id}).exec();
     }
     catch (err) {
         return res.status(500).json({
@@ -112,7 +112,7 @@ const remove = async (req, res) => {
     let id = req.params.id;
 
     try {
-        let {name} = {modelName}.findByIdAndRemove(id);
+        let {name} = await {modelName}.findByIdAndRemove(id).exec();
         return res.status(204).json();
     }
     catch (err) {
@@ -130,14 +130,14 @@ const paginate = async (req, res) => {
   
     try {
       // execute query with page and limit values
-      const {name} = await {modelName}.find()
+      const {pluralName} = await {modelName}.find()
         .limit(limit * 1)
         .skip((page - 1) * limit)
         .exec();
   
       // return response with {name} and current page
       res.json({
-        {name},
+        {pluralName},
         currentPage: page
       });
     } catch (err) {
