@@ -101,7 +101,7 @@ router.get('/:id', carController.show);
 /*
  * GET
  */
-router.get('/paginate', carController.paginate);
+router.get('/p/paginate', carController.paginate);
 
 /*
  * POST
