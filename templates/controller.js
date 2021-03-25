@@ -11,15 +11,17 @@ module.exports = {
      * {controllerName}.list()
      */
     list: function (req, res) {
-        {modelName}.find(function (err, {pluralName}) {
-            if (err) {
+        
+            try {
+                let {pluralName} = await {modelName}.find({});
+                return res.json({pluralName});
+            }
+            catch (err) {
                 return res.status(500).json({
                     message: 'Error when getting {name}.',
                     error: err
                 });
-            }
-
-            return res.json({pluralName});
+            };
         });
     },
 
