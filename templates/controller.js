@@ -1,4 +1,4 @@
-var {modelName} = require({modelPath});
+const {modelName} = require({modelPath});
 
 /**
  * {controllerName}.js
