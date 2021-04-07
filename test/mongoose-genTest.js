@@ -344,9 +344,9 @@ function parseCreatedFiles(output, dir) {
     if (typeof output === 'string') {
         lines = output.split(/[\r\n]+/);
     }
-    const match;
+    let match;
 
-    for (const i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
         if ((match = /create.*?: (.*)$/.exec(lines[i]))) {
             let file = match[1];
 
