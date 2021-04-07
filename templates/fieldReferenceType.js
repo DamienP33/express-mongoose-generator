@@ -1,6 +1,6 @@
-var os = require('os');
+const os = require('os');
 
-var objectId = {
+const objectId = {
     name: '{' + os.EOL +
     '\t \ttype: Schema.Types.ObjectId,' + os.EOL +
     '\t \tref: \'{ref}\'' + os.EOL +
