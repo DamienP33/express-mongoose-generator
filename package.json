@@ -28,8 +28,7 @@
     "main": "bin/mongoose-gen",
     "scripts": {
         "test": "mocha --reporter spec --bail --check-leaks test/",
-        "lint": "jshint ./**/*.js ./bin/mongoose-gen",
-        "cs": "jscs ./**/*.js ./bin/mongoose-gen"
+        "lint": "jshint ./**/*.js ./bin/mongoose-gen"
     },
     "engines": {
         "node": ">= 0.10.0"
@@ -44,7 +43,6 @@
         "commander": "^2.5.0"
     },
     "devDependencies": {
-        "jscs": "^3.0.7",
         "jshint": "^2.8.0",
         "mkdirp": "^0.5.0",
         "mocha": "^8.3.2",
