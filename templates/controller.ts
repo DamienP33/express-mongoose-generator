@@ -14,7 +14,7 @@ export = {
         {modelName}.find((err, {pluralName}) => {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting {name}.',
+                    message: 'Error when getting {pluralName}.',
                     error: err
                 });
             }
