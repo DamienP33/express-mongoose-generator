@@ -13,6 +13,11 @@ router.get('/', {controllerName}.list);
 router.get('/:id', {controllerName}.show);
 
 /*
+ * GET
+ */
+router.get('/p/paginate', {controllerName}.paginate);
+
+/*
  * POST
  */
 router.post('/', {controllerName}.create);
