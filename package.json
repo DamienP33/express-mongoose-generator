@@ -39,7 +39,7 @@
         "mongoose-gen": "./bin/mongoose-gen"
     },
     "dependencies": {
-        "async": "^0.9.0",
+        "async": "^2.6.4",
         "commander": "^2.5.0"
     },
     "devDependencies": {
