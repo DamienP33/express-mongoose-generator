@@ -1,4 +1,11 @@
-const {modelName} = require({modelPath});
+'use strict';
+
+/**
+ * Module dependencies
+ */
+
+const mongoose = require('mongoose');
+const {modelName} = mongoose.model('{modelNameCaptialized}')
 
 /**
  * {controllerName}.js
@@ -10,7 +17,7 @@ const {modelName} = require({modelPath});
 /**
  * {controllerName}.list()
  */
-const list = async (req, res) => {
+exports.list = async (req, res) => {
 
     try {
         let {pluralName} = await {modelName}.find({}).exec();
@@ -27,7 +34,7 @@ const list = async (req, res) => {
 /**
  * {controllerName}.show()
  */
-const show = async (req, res) => {
+exports.show = async (req, res) => {
 
     let id = req.params.id;
 
@@ -54,7 +61,7 @@ const show = async (req, res) => {
 /**
  * {controllerName}.create()
  */
-const create = async (req, res) => {
+exports.create = async (req, res) => {
 
     let {name} = new {modelName}({{createFields}});
 
@@ -73,8 +80,7 @@ const create = async (req, res) => {
 /**
 * {controllerName}.update()
 */
-
-const update = async (req, res) => {
+exports.update = async (req, res) => {
     let id = req.params.id;
     let {name};
 
@@ -108,7 +114,7 @@ const update = async (req, res) => {
 /**
  * {controllerName}.remove()
  */
-const remove = async (req, res) => {
+exports.remove = async (req, res) => {
     let id = req.params.id;
 
     try {
@@ -124,7 +130,7 @@ const remove = async (req, res) => {
 
 };
 
-const paginate = async (req, res) => {
+exports.paginate = async (req, res) => {
     // destructure page and limit and set default values
     const { page = 1, limit = 10 } = req.query;
 
@@ -147,12 +153,3 @@ const paginate = async (req, res) => {
         });
     }
   });
-
-module.exports = {
-    list,
-    show,
-    create,
-    update,
-    remove,
-    paginate,
-};
