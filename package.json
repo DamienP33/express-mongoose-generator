@@ -11,7 +11,8 @@
         "ihatem",
         "eumend",
         "KetanIP",
-        "criduvero"
+        "criduvero",
+        "BetweenTwoTests"
     ],
     "keywords": [
         "mongodb",
@@ -22,11 +23,12 @@
         "restfull",
         "api",
         "app",
-        "web"
+        "web",
+        "madhums"
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/DamienP33/express-mongoose-generator"
+        "url": "https://github.com/BetweenTwoTests/express-mongoose-generator/tree/conform-to-madhums"
     },
     "main": "bin/mongoose-gen",
     "scripts": {
