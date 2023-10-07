@@ -5,154 +5,107 @@ const {modelName} = require({modelPath});
  *
  * @description :: Server-side logic for managing {pluralName}.
  */
+module.exports = {
 
-
-/**
- * {controllerName}.list()
- */
-const list = async (req, res) => {
-
-    try {
-        let {pluralName} = await {modelName}.find({}).exec();
-        return res.json({pluralName});
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when getting {pluralName}.',
-            error: err
-        });
-    };
-};
-
-/**
- * {controllerName}.show()
- */
-const show = async (req, res) => {
-
-    let id = req.params.id;
-
-    try {
-        let {name} = await {modelName}.findOne({_id: id}).exec();
-
-        if (!{name}) {
-            return res.status(404).json({
-                message: 'No such {name}'
+    /**
+     * {controllerName}.list()
+     */
+    list: async (req, res) => {
+        try {
+            const {pluralName} = await {modelName}.find().exec();
+            return res.status(200).json({pluralName});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting {pluralName}.',
+                error: err
             });
         }
+    },
 
-        return res.json({name});
+    /**
+     * {controllerName}.show()
+     */
+    show: async function (req, res) {
+        const id = req.params.id;
+
+        try {
+            const {name} = await {modelName}.findById(id).exec();
+            if (!{name}) {
+                return res.status(404).json({
+                    message: 'No such {name}.'
+                });
+            }
+            return res.status(200).json({name});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting {name}.',
+                error: err
+            });
+        }
+    },
+
+    /**
+     * {controllerName}.create()
+     */
+    create: async function (req, res) {
+        try {
+            const {name} = new {modelName}({{createFields}
+            });
+
+            await {name}.save();
+            return res.status(201).json({name});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when creating {name}',
+                error: err
+            });
+        }
+    },
+
+    /**
+     * {controllerName}.update()
+     */
+    update: async function (req, res) {
+        const id = req.params.id;
+
+        try {
+            const {name} = await {modelName}.findById(id).exec();
+            if (!{name}) {
+                return res.status(404).json({
+                    message: 'No such {name}'
+                });
+            }
+
+            {updateFields}
+            await {name}.save();
+            return res.json.status(200)({name});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when updating {name}.',
+                error: err
+            });
+        }
+    },
+
+    /**
+     * {controllerName}.remove()
+     */
+    remove: async function (req, res) {
+        const id = req.params.id;
+
+        try {
+            const {name} = await {modelName}.findByIdAndRemove(id);
+            if (!{name}) {
+                return res.status(404).json({
+                    message: 'No such {name}'
+                });
+            }
+            return res.status(204).json();
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when deleting the {name}.',
+                error: err
+            });
+        }
     }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when getting {name}.',
-            error: err
-        });
-    }
-
-};
-
-/**
- * {controllerName}.create()
- */
-const create = async (req, res) => {
-
-    let {name} = new {modelName}({{createFields}});
-
-    try {
-        {name} = await {name}.save();
-        return res.status(201).json({name});
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when creating {name}.',
-            error: err
-        });
-    }
-}
-
-/**
-* {controllerName}.update()
-*/
-
-const update = async (req, res) => {
-    let id = req.params.id;
-    let {name};
-
-    try {
-        {name} = await {modelName}.findOne({_id: id}).exec();
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when getting {name}',
-            error: err
-        });
-    }
-
-
-    {updateFields}
-
-    try {
-        {name} = await {name}.save();
-        return res.json({name});
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when updating {name}.',
-            error: err
-        });
-    }
-
-};
-
-
-/**
- * {controllerName}.remove()
- */
-const remove = async (req, res) => {
-    let id = req.params.id;
-
-    try {
-        let {name} = await {modelName}.findByIdAndRemove(id).exec();
-        return res.status(204).json();
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when deleting the {name}.',
-            error: err
-        });
-    }
-
-};
-
-const paginate = async (req, res) => {
-    // destructure page and limit and set default values
-    const { page = 1, limit = 10 } = req.query;
-
-    try {
-      // execute query with page and limit values
-      const {pluralName} = await {modelName}.find()
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec();
-
-      // return response with {name} and current page
-      res.json({
-        {pluralName},
-        currentPage: page
-      });
-    } catch (err) {
-        return res.status(500).json({
-            message: 'Error while paginating {name}.',
-            error: err
-        });
-    }
-  });
-
-module.exports = {
-    list,
-    show,
-    create,
-    update,
-    remove,
-    paginate,
 };

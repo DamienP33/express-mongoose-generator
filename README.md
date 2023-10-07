@@ -64,15 +64,15 @@ const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
 const carSchema = new Schema({
-	"color" : String,
-	"door" : Number,
-    "owner" : {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+	'color' : String,
+	'door' : Number,
+	'owner' : {
+	 	type: Schema.Types.ObjectId,
+	 	ref: 'User'
+	}
 });
 
-module.exports = mongoose.model('car', carSchema);
+module.exports = mongoose.model('Car', carSchema);
 ```
 
 ### Router
@@ -80,7 +80,7 @@ routes/carRoutes.js :
 ```javascript
 const express = require('express');
 const router = express.Router();
-const carController = require('./carController.js');
+const carController = require('../controllers/carController.js');
 
 /*
  * GET
@@ -91,11 +91,6 @@ router.get('/', carController.list);
  * GET
  */
 router.get('/:id', carController.show);
-
-/*
- * GET
- */
-router.get('/p/paginate', carController.paginate);
 
 /*
  * POST
@@ -119,169 +114,122 @@ module.exports = router;
 ### Controller
 controllers/carController.js :
 ```javascript
-const CarModel = require('./carModel.js');
+const CarModel = require('../models/carModel.js');
 
 /**
  * carController.js
  *
  * @description :: Server-side logic for managing cars.
  */
+module.exports = {
 
-
-/**
- * carController.list()
- */
-const list = async (req, res) => {
-        
-    try {
-        let cars = await CarModel.find({});
-        return res.json(cars);
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when getting car.',
-            error: err
-        });
-    };
-};
-
-/**
- * carController.show()
- */
-const show = async (req, res) => {
-
-    let id = req.params.id;
-
-    try {
-        let car = await CarModel.findOne({_id: id});
-
-        if (!car) {
-            return res.status(404).json({
-                message: 'No such car'
+    /**
+     * carController.list()
+     */
+    list: async (req, res) => {
+        try {
+            const cars = await CarModel.find().exec();
+            return res.status(200).json(cars);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting cars.',
+                error: err
             });
         }
+    },
 
-        return res.json(car);
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when getting car.',
-            error: err
-        });
-    }
+    /**
+     * carController.show()
+     */
+    show: async function (req, res) {
+        const id = req.params.id;
 
-};
+        try {
+            const car = await CarModel.findById(id).exec();
+            if (!car) {
+                return res.status(404).json({
+                    message: 'No such car.'
+                });
+            }
+            return res.status(200).json(car);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting car.',
+                error: err
+            });
+        }
+    },
 
-/**
- * carController.create()
- */
-const create = async (req, res) => {
+    /**
+     * carController.create()
+     */
+    create: async function (req, res) {
+        try {
+            const car = new CarModel({
+				door: req.body.door,
+				color: req.body.color,
+				owner: req.body.owner
+            });
 
-    let car = new CarModel({
-			door : req.body.door,
-			color : req.body.color,
-			owner : req.body.owner});
-    
-    try {
-        let car = await car.save();
-        return res.status(201).json(car);
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when creating car.',
-            error: err
-        });
-    }
-}
+            await car.save();
+            return res.status(201).json(car);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when creating car',
+                error: err
+            });
+        }
+    },
 
-/**
-* carController.update()
-*/
+    /**
+     * carController.update()
+     */
+    update: async function (req, res) {
+        const id = req.params.id;
 
-const update = async (req, res) => {
-    let id = req.params.id;
-    let car;
+        try {
+            const car = await CarModel.findById(id).exec();
+            if (!car) {
+                return res.status(404).json({
+                    message: 'No such car'
+                });
+            }
 
-    try {
-        car = await CarModel.findOne({_id: id});
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when getting car',
-            error: err
-        });
-    }
-
-
-    car.door = req.body.door ? req.body.door : car.door;
-			car.color = req.body.color ? req.body.color : car.color;
-			car.owner = req.body.owner ? req.body.owner : car.owner;
+            car.door = req.body.door ?? car.door;
+			car.color = req.body.color ?? car.color;
+			car.owner = req.body.owner ?? car.owner;
 			
+            await car.save();
+            return res.json.status(200)(car);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when updating car.',
+                error: err
+            });
+        }
+    },
 
-    try {
-        car = await car.save();
-        return res.json(car);
+    /**
+     * carController.remove()
+     */
+    remove: async function (req, res) {
+        const id = req.params.id;
+
+        try {
+            const car = await CarModel.findByIdAndRemove(id);
+            if (!car) {
+                return res.status(404).json({
+                    message: 'No such car'
+                });
+            }
+            return res.status(204).json();
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when deleting the car.',
+                error: err
+            });
+        }
     }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when updating car.',
-            error: err
-        });
-    }
-
-};
-
-
-/**
- * carController.remove()
- */
-const remove = async (req, res) => {
-    let id = req.params.id;
-
-    try {
-        let car = CarModel.findByIdAndRemove(id);
-        return res.status(204).json();
-    }
-    catch (err) {
-        return res.status(500).json({
-            message: 'Error when deleting the car.',
-            error: err
-        });
-    }
-
-};
-
-const paginate = async (req, res) => {
-    // destructure page and limit and set default values
-    const { page = 1, limit = 10 } = req.query;
-  
-    try {
-      // execute query with page and limit values
-      const car = await CarModel.find()
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec();
-  
-      // return response with car and current page
-      res.json({
-        car,
-        currentPage: page
-      });
-    } catch (err) {
-        return res.status(500).json({
-            message: 'Error while paginating car.',
-            error: err
-        });
-    }
-  });
-
-module.exports = {
-    list,
-    show,
-    create,
-    update,
-    remove,
-    paginate,
 };
 ```
 
@@ -309,5 +257,5 @@ app.use('/cars', cars);
 
 ## Licence
 
-Copyright (c) 2021 Damien Perrier.
+Copyright (c) 2023 Damien Perrier.
 Licensed under the [MIT license](LICENSE).
