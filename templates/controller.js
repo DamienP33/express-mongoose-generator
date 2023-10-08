@@ -25,7 +25,7 @@ module.exports = {
     /**
      * {controllerName}.show()
      */
-    show: async function (req, res) {
+    show: async (req, res) => {
         const id = req.params.id;
 
         try {
@@ -47,7 +47,7 @@ module.exports = {
     /**
      * {controllerName}.create()
      */
-    create: async function (req, res) {
+    create: async (req, res) => {
         try {
             const {name} = new {modelName}({{createFields}
             });
@@ -65,7 +65,7 @@ module.exports = {
     /**
      * {controllerName}.update()
      */
-    update: async function (req, res) {
+    update: async (req, res) => {
         const id = req.params.id;
 
         try {
@@ -90,7 +90,7 @@ module.exports = {
     /**
      * {controllerName}.remove()
      */
-    remove: async function (req, res) {
+    remove: async (req, res) => {
         const id = req.params.id;
 
         try {
