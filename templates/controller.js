@@ -10,76 +10,66 @@ module.exports = {
     /**
      * {controllerName}.list()
      */
-    list: function (req, res) {
-        {modelName}.find(function (err, {pluralName}) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting {name}.',
-                    error: err
-                });
-            }
-
-            return res.json({pluralName});
-        });
+    list: async (req, res) => {
+        try {
+            const {pluralName} = await {modelName}.find().exec();
+            return res.status(200).json({pluralName});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting {pluralName}.',
+                error: err
+            });
+        }
     },
 
     /**
      * {controllerName}.show()
      */
-    show: function (req, res) {
+    show: async (req, res) => {
         const id = req.params.id;
 
-        {modelName}.findOne({_id: id}, function (err, {name}) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting {name}.',
-                    error: err
-                });
-            }
-
+        try {
+            const {name} = await {modelName}.findById(id).exec();
             if (!{name}) {
                 return res.status(404).json({
-                    message: 'No such {name}'
+                    message: 'No such {name}.'
                 });
             }
-
-            return res.json({name});
-        });
+            return res.status(200).json({name});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting {name}.',
+                error: err
+            });
+        }
     },
 
     /**
      * {controllerName}.create()
      */
-    create: function (req, res) {
-        const {name} = new {modelName}({{createFields}
-        });
+    create: async (req, res) => {
+        try {
+            const {name} = new {modelName}({{createFields}
+            });
 
-        {name}.save(function (err, {name}) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating {name}',
-                    error: err
-                });
-            }
-
+            await {name}.save();
             return res.status(201).json({name});
-        });
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when creating {name}',
+                error: err
+            });
+        }
     },
 
     /**
      * {controllerName}.update()
      */
-    update: function (req, res) {
+    update: async (req, res) => {
         const id = req.params.id;
 
-        {modelName}.findOne({_id: id}, function (err, {name}) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting {name}',
-                    error: err
-                });
-            }
-
+        try {
+            const {name} = await {modelName}.findById(id).exec();
             if (!{name}) {
                 return res.status(404).json({
                     message: 'No such {name}'
@@ -87,34 +77,35 @@ module.exports = {
             }
 
             {updateFields}
-            {name}.save(function (err, {name}) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating {name}.',
-                        error: err
-                    });
-                }
-
-                return res.json({name});
+            await {name}.save();
+            return res.json.status(200)({name});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when updating {name}.',
+                error: err
             });
-        });
+        }
     },
 
     /**
      * {controllerName}.remove()
      */
-    remove: function (req, res) {
+    remove: async (req, res) => {
         const id = req.params.id;
 
-        {modelName}.findByIdAndRemove(id, function (err, {name}) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the {name}.',
-                    error: err
+        try {
+            const {name} = await {modelName}.findByIdAndRemove(id);
+            if (!{name}) {
+                return res.status(404).json({
+                    message: 'No such {name}'
                 });
             }
-
             return res.status(204).json();
-        });
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when deleting the {name}.',
+                error: err
+            });
+        }
     }
 };

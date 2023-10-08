@@ -64,15 +64,15 @@ const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
 const carSchema = new Schema({
-	"color" : String,
-	"door" : Number,
-    "owner" : {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+	'color' : String,
+	'door' : Number,
+	'owner' : {
+	 	type: Schema.Types.ObjectId,
+	 	ref: 'User'
+	}
 });
 
-module.exports = mongoose.model('car', carSchema);
+module.exports = mongoose.model('Car', carSchema);
 ```
 
 ### Router
@@ -114,7 +114,7 @@ module.exports = router;
 ### Controller
 controllers/carController.js :
 ```javascript
-const carModel = require('../models/carModel.js');
+const CarModel = require('../models/carModel.js');
 
 /**
  * carController.js
@@ -126,110 +126,109 @@ module.exports = {
     /**
      * carController.list()
      */
-    list: function(req, res) {
-        carModel.find(function(err, cars){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error getting car.'
-                });
-            }
-            return res.json(cars);
-        });
+    list: async (req, res) => {
+        try {
+            const cars = await CarModel.find().exec();
+            return res.status(200).json(cars);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting cars.',
+                error: err
+            });
+        }
     },
 
     /**
      * carController.show()
      */
-    show: function(req, res) {
+    show: async function (req, res) {
         const id = req.params.id;
-        carModel.findOne({_id: id}, function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error getting car.'
-                });
-            }
-            if(!car) {
+
+        try {
+            const car = await CarModel.findById(id).exec();
+            if (!car) {
                 return res.status(404).json({
-                    message: 'No such car'
+                    message: 'No such car.'
                 });
             }
-            return res.json(car);
-        });
+            return res.status(200).json(car);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when getting car.',
+                error: err
+            });
+        }
     },
 
     /**
      * carController.create()
      */
-    create: function(req, res) {
-        const car = new carModel({
-			color : req.body.color,
-			door : req.body.door
-        });
-
-        car.save(function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error saving car',
-                    error: err
-                });
-            }
-            return res.json({
-                message: 'saved',
-                _id: car._id
+    create: async function (req, res) {
+        try {
+            const car = new CarModel({
+				door: req.body.door,
+				color: req.body.color,
+				owner: req.body.owner
             });
-        });
+
+            await car.save();
+            return res.status(201).json(car);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when creating car',
+                error: err
+            });
+        }
     },
 
     /**
      * carController.update()
      */
-    update: function(req, res) {
+    update: async function (req, res) {
         const id = req.params.id;
-        carModel.findOne({_id: id}, function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error saving car',
-                    error: err
-                });
-            }
-            if(!car) {
+
+        try {
+            const car = await CarModel.findById(id).exec();
+            if (!car) {
                 return res.status(404).json({
                     message: 'No such car'
                 });
             }
 
-            car.color =  req.body.color ? req.body.color : car.color;
-			car.door =  req.body.door ? req.body.door : car.door;
+            car.door = req.body.door ?? car.door;
+			car.color = req.body.color ?? car.color;
+			car.owner = req.body.owner ?? car.owner;
 			
-            car.save(function(err, car){
-                if(err) {
-                    return res.status(500).json({
-                        message: 'Error getting car.'
-                    });
-                }
-                if(!car) {
-                    return res.status(404).json({
-                        message: 'No such car'
-                    });
-                }
-                return res.json(car);
+            await car.save();
+            return res.json.status(200)(car);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when updating car.',
+                error: err
             });
-        });
+        }
     },
 
     /**
      * carController.remove()
      */
-    remove: function(req, res) {
+    remove: async function (req, res) {
         const id = req.params.id;
-        carModel.findByIdAndRemove(id, function(err, car){
-            if(err) {
-                return res.status(500).json({
-                    message: 'Error getting car.'
+
+        try {
+            const car = await CarModel.findByIdAndRemove(id);
+            if (!car) {
+                return res.status(404).json({
+                    message: 'No such car'
                 });
             }
-            return res.json(car);
-        });
+            return res.status(204).json();
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error when deleting the car.',
+                error: err
+            });
+        }
     }
 };
 ```
@@ -258,5 +257,5 @@ app.use('/cars', cars);
 
 ## Licence
 
-Copyright (c) 2017 Damien Perrier
+Copyright (c) 2023 Damien Perrier.
 Licensed under the [MIT license](LICENSE).
